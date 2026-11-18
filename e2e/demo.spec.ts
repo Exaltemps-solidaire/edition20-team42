@@ -5,6 +5,7 @@ test("Démo : le cas passant", async ({ page }) => {
   await test.step("J'ouvre l'application et je vois le mock du vrai site", async () => {
     await page.goto("/");
     await expect(page.getByText("Imagine for Margo")).toHaveCount(1);
+    await expect(page.getByRole("button", { name: "FAIRE UN DON" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Se connecter" })).toBeVisible();
   });
 
@@ -20,13 +21,15 @@ test("Démo : le cas passant", async ({ page }) => {
     await expect(page.getByRole("button", { name: /Se déconnecter/ })).toBeVisible();
   });
 
-  await test.step("Je ne vois que mon profil dans le header, pas les 3 autres", async () => {
-    await expect(page.getByRole("banner").getByText("PARTICULIER", { exact: true })).toBeVisible();
+  await test.step("Je ne vois que mon profil dans une barre au-dessus du header, pas les 3 autres", async () => {
+    await expect(page.getByText("PARTICULIER", { exact: true })).toBeVisible();
+    await expect(page.getByRole("banner").getByText("PARTICULIER", { exact: true })).toHaveCount(0);
     await expect(page.getByRole("banner").getByRole("button", { name: "TESTATEUR" })).toHaveCount(0);
   });
 
-  await test.step("Je ne vois qu'un seul header, avec « Imagine for Margo » une seule fois", async () => {
+  await test.step("Je ne vois qu'un seul header, avec « Imagine for Margo » une seule fois, et le bouton FAIRE UN DON en haut", async () => {
     await expect(page.getByText("Imagine for Margo")).toHaveCount(1);
+    await expect(page.getByRole("link", { name: "FAIRE UN DON" })).toBeVisible();
   });
 
   await test.step("Je vois les arguments du PRD pour le particulier et le bouton de don", async () => {
@@ -34,8 +37,8 @@ test("Démo : le cas passant", async ({ page }) => {
     await expect(page.getByRole("link", { name: "Accéder au don" })).toBeVisible();
   });
 
-  await test.step("Je clique sur Accéder au don et j'arrive sur l'emplacement du formulaire iRaiser", async () => {
-    await page.getByRole("link", { name: "Accéder au don" }).click();
+  await test.step("Je clique sur FAIRE UN DON dans le header et j'arrive sur l'emplacement du formulaire iRaiser", async () => {
+    await page.getByRole("link", { name: "FAIRE UN DON" }).click();
     await expect(page.getByText("Formulaire de don (iRaiser)")).toBeVisible();
   });
 

@@ -22,6 +22,32 @@ function SiteHeader({ actions }: { actions?: React.ReactNode }) {
   );
 }
 
+function BoutonFaireUnDon({ versDon, onDemanderProfil }: { versDon: boolean; onDemanderProfil: () => void }) {
+  if (versDon) {
+    return (
+      <a className={styles.faireUnDon} href="#don">
+        FAIRE UN DON
+      </a>
+    );
+  }
+  return (
+    <button className={styles.faireUnDon} onClick={onDemanderProfil}>
+      FAIRE UN DON
+    </button>
+  );
+}
+
+function BarreProfil({ profil, nom, onDeconnexion }: { profil: Profil; nom: string; onDeconnexion: () => void }) {
+  return (
+    <div className={styles.barreProfil}>
+      <span className={styles.profilActif}>{PROFILS.find((p) => p.id === profil)?.etiquette}</span>
+      <button className={styles.changerPersona} onClick={onDeconnexion}>
+        Se déconnecter ({nom})
+      </button>
+    </div>
+  );
+}
+
 export default function Home() {
   const [etape, setEtape] = useState<Etape>("mock");
   const [profilChoisi, setProfilChoisi] = useState<Profil | null>(null);
@@ -33,9 +59,12 @@ export default function Home() {
       <div className={styles.page}>
         <SiteHeader
           actions={
-            <button className={styles.faireUnDon} onClick={() => setEtape("profil")}>
-              Se connecter
-            </button>
+            <>
+              <BoutonFaireUnDon versDon={false} onDemanderProfil={() => setEtape("profil")} />
+              <button className={styles.changerPersona} onClick={() => setEtape("profil")}>
+                Se connecter
+              </button>
+            </>
           }
         />
         <main className={styles.main}>
@@ -49,7 +78,7 @@ export default function Home() {
   if (etape === "profil") {
     return (
       <div className={styles.page}>
-        <SiteHeader />
+        <SiteHeader actions={<BoutonFaireUnDon versDon={false} onDemanderProfil={() => setEtape("profil")} />} />
         <main className={styles.main}>
           <h1>Choisissez votre profil</h1>
           <p>Sélectionnez le profil qui vous correspond pour accéder à votre parcours.</p>
@@ -90,21 +119,18 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
+      <BarreProfil
+        profil={profilActif}
+        nom={nom}
+        onDeconnexion={() => {
+          setEtape("mock");
+          setProfilChoisi(null);
+          setNom("");
+        }}
+      />
       <SiteHeader
         actions={
-          <>
-            <span className={styles.profilActif}>{PROFILS.find((p) => p.id === profilActif)?.etiquette}</span>
-            <button
-              className={styles.changerPersona}
-              onClick={() => {
-                setEtape("mock");
-                setProfilChoisi(null);
-                setNom("");
-              }}
-            >
-              Se déconnecter ({nom})
-            </button>
-          </>
+          <BoutonFaireUnDon versDon={Boolean(argumentsDuProfil(profilActif))} onDemanderProfil={() => setEtape("profil")} />
         }
       />
       <main className={styles.main}>

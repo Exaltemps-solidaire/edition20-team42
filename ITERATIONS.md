@@ -378,6 +378,40 @@
 
 ---
 
+## Itération 12 : bouton « Faire un don » remonté dans le header, profil actif déplacé dans une barre au-dessus (demande développeur)
+
+- Replanification du 2026-11-18 (nouvelle demande du développeur, après l'itération 11) : « pour le button faire un don c'est mieux de le mettre en haut pour attirer l'attention de l'user, l'affichage du profil peut être mis au dessus du header ». ⚠️ Ça annule en partie le retrait du bouton « FAIRE UN DON » fait en itération 10 (doublon de marque réglé à ce moment) : clarifié avec le développeur avant de coder — confirmé qu'il veut bien un CTA « Faire un don » général et visible, séparé du lien « Accéder au don » posé en itération 11, et que le profil actif + « Se déconnecter » passent dans une fine barre au-dessus du header principal plutôt que dans le header lui-même. Temps restant reconfirmé à ce moment : **moins de 10 minutes**.
+- **Dans le périmètre** :
+  - Une fine barre au-dessus du header principal, visible uniquement une fois connecté : profil actif + « Se déconnecter ».
+  - Le header principal garde marque + rubriques, et gagne un bouton « FAIRE UN DON » bien visible à droite, sur les 3 écrans (mock, choix de profil, connecté).
+  - Clic sur « FAIRE UN DON » : si non connecté, amène au choix de profil (`etape = "profil"`) ; si connecté sur un profil avec du contenu (particulier/entreprise), amène à l'ancre `#don` posée en itération 11 ; si connecté sans contenu (testateur/organisateur), amène aussi au choix de profil pour changer de profil (pas de contenu de don à cibler).
+- **Hors périmètre** : le lien « Accéder au don » du contenu profil (itération 11, inchangé) ; tout calcul ou vraie page de don (toujours l'ancre `#don`, pas d'URL iRaiser réelle).
+- **Critères d'acceptation** :
+  - Étant donné n'importe lequel des 3 écrans, quand je regarde le haut de la page, alors je vois un bouton « FAIRE UN DON » visible en premier.
+  - Étant donné que je suis connecté, quand je regarde au-dessus du header, alors je vois mon profil actif et « Se déconnecter » dans une barre séparée, plus dans le header lui-même.
+  - Étant donné que je clique sur « FAIRE UN DON » alors que je suis connecté avec du contenu de don disponible, alors j'arrive sur la même section que via « Accéder au don » (pas de nouvelle destination).
+- **Hypothèse de l'équipe couverte** : aucune, demande de design directement du développeur.
+- **Codage estimé** : 5 minutes (restructuration du header existant, pas de nouvelle logique métier).
+- ✂️ Moins de 10 minutes au total : traitée comme itération de stabilisation, sans marge pour un tour de test complet derrière — possiblement la dernière avant le pitch.
+- **Fichiers prévus** : `frontend/src/app/page.tsx` (barre profil + bouton FAIRE UN DON dans le header), `frontend/src/app/page.module.css` (nouvelle barre, bouton header), `e2e/demo.spec.ts` (étape de clic sur le nouveau bouton). (3 fichiers)
+- **Tests unitaires prévus** : aucun nouveau — balisage/CSS pur.
+- **Étapes ajoutées à la démo** : clic sur « FAIRE UN DON » depuis l'écran connecté (profil particulier), vérification de l'arrivée sur la section `#don`.
+- **Bilan** :
+  - Codage réel : 1 minute, sans dépassement.
+  - Les 3 critères d'acceptation sont satisfaits : « FAIRE UN DON » est visible en premier dans le header sur les 3 écrans ; le profil actif + « Se déconnecter » sont dans une barre séparée au-dessus du header (plus dans le header) ; cliquer sur « FAIRE UN DON » connecté avec contenu amène à la même ancre `#don` qu'« Accéder au don ».
+  - Tests : aucun nouveau test (markup/CSS pur, confirmé) ; `npm test` passe toujours avec 10 tests (2 API + 8 front).
+  - Contrat de déployabilité : `./scripts/verifier-deployabilite.sh` → « aucune borne franchie ».
+  - Déploiement : image frontend reconstruite et republiée, conteneur recréé (`podman ps` confirme `Up`), `localhost:8080/`, `/health`, `/sante` et `localhost:8081/health` répondent tous 200.
+  - Démo : `e2e/demo.spec.ts` mis à jour (vérification du bouton FAIRE UN DON dès l'écran mock, du déplacement du profil hors du `banner`, et du clic FAIRE UN DON → section `#don`) et rejouée avec succès (1 passed).
+  - Version 12 signalée à PM Lab avec succès (aucun blocage du harnais).
+  - Rien de reporté : correctif de design ciblé, entièrement traité.
+  - **Modifications** :
+    - `frontend/src/app/page.tsx` : nouveaux composants `BoutonFaireUnDon` (lien vers `#don` si contenu disponible, sinon bouton vers le choix de profil) et `BarreProfil` (profil actif + déconnexion, rendue au-dessus du header côté connecté) ; le header gagne ce bouton sur les 3 écrans. Sert les 3 critères d'acceptation.
+    - `frontend/src/app/page.module.css` : ajout de `.barreProfil` (fine barre discrète au-dessus du header). Sert le critère de positionnement du profil.
+    - `e2e/demo.spec.ts` : nouvelles assertions sur la visibilité du bouton FAIRE UN DON dès le mock, sur l'absence du profil dans le `banner`, et un nouveau clic FAIRE UN DON → section `#don`. Sert les 3 critères d'acceptation.
+
+---
+
 ## À venir
 
 1. Page de confirmation après le don, avec affichage statique du niveau de fidélité (scénario narratif de `7-prd.md`, au-delà du plan de livraison validé qui s'arrête à l'étape 4 — ⚠️ recoupe un point hors périmètre, à valider par les cadreurs avant d'être reprise).
