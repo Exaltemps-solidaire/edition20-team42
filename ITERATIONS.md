@@ -230,10 +230,21 @@
   - Étant donné un profil connecté, alors le contenu affiché reste celui du bon profil (pas de régression du routage existant).
 - **Hypothèse de l'équipe couverte** : retour cadreur direct (ci-dessus), pas une hypothèse déjà écrite dans la passation.
 - **Codage estimé** : 3 minutes (renommage + suppression de la nav, réutilise les classes CSS existantes).
+- ⚠️ Temps restant reconfirmé au début de cette itération (2026-11-18) : **moins de 10 minutes**. Ça ne couvre plus codage + publication (~5 min) + tour de test (5 min) en entier : codage réduit au strict minimum (renommage du bouton + remplacement du header, sans toucher à la démo si le temps manque), et c'est la dernière itération du build — à consacrer à la stabilité pour le pitch, pas à la page entreprise (itération 8, non codée).
 - **Fichiers prévus** : `frontend/src/app/page.tsx` (bouton + header), `frontend/src/app/page.module.css` (style du badge de profil actif remplaçant la nav), `e2e/demo.spec.ts` (la démo bascule actuellement de profil sans déconnexion — ex. PARTICULIER → TESTATEUR —, ce qui ne sera plus possible : à corriger pour déconnecter entre deux profils).
 - **Tests unitaires prévus** : aucun nouveau — changement de balisage pur (header, libellé de bouton), pas de nouvelle logique métier ; les tests existants (`peutContinuer`, `argumentsDuProfil`, `estProfilDisponible`) continuent de protéger la logique inchangée.
 - **Étapes ajoutées à la démo** : après connexion, vérifier qu'un seul profil est visible dans le header (pas de bouton vers les 3 autres) ; adapter l'étape qui regardait TESTATEUR pour passer par une déconnexion.
-- **Bilan** : _à remplir en fin d'itération (durée de codage réelle, dépassement éventuel, fait, reporté, modifications fichier par fichier)_
+- **Bilan** :
+  - Codage réel : < 1 minute (chrono à 0 min), aucun dépassement.
+  - Les 3 critères d'acceptation sont satisfaits : bouton renommé « Se connecter » ; header limité au badge du profil actif, sans bouton vers les 3 autres (vérifié aussi par une nouvelle étape de démo) ; le contenu affiché reste correct par profil, aucune régression du routage.
+  - Pas de nouveau test unitaire (changement de balisage pur, comme prévu) ; les 9 tests existants passent toujours. `./scripts/verifier-deployabilite.sh` : aucune borne franchie.
+  - Déployé (frontend uniquement, API inchangée) : `localhost:8080/`, `/health`, `/sante` et `localhost:8081/health` répondent tous 200.
+  - Démo mise à jour : étape de vérification du header à un seul profil, et les changements de profil passent désormais par une déconnexion (plus de bascule directe) ; rejouée avec succès.
+  - Version 7 signalée à PM Lab, rien bloqué par le harnais.
+  - Reporté : la page entreprise réelle (itération 8) n'a pas été codée — temps restant insuffisant (< 10 minutes au début de cette itération), conformément à la décision de consacrer cette dernière itération à la stabilité.
+  - **Modifications** :
+    - `frontend/src/app/page.tsx` : bouton de l'écran d'accueil renommé « Se connecter » (sert le 1er critère) ; header remplacé par un badge du seul profil actif au lieu de la nav à 4 boutons (sert le 2e critère, pas de changement du routage par `profilActif` → sert le 3e).
+    - `e2e/demo.spec.ts` : étape ajoutée vérifiant l'absence du bouton TESTATEUR dans le header une fois connecté ; les étapes suivantes passent par une déconnexion avant de changer de profil.
 
 ---
 
@@ -256,6 +267,6 @@
 
 ## À venir
 
-1. La page entreprise réelle (itération 8, ancienne itération 7) — ✂️ reportée tant que le temps ne permet qu'une itération de stabilisation (itération 7).
+1. La page entreprise réelle (itération 8, ancienne itération 7) — ✂️ reportée après l'itération 7 : temps restant annoncé moins de 10 minutes à son début, probablement épuisé par la publication de l'itération 7 elle-même. À ne lancer que si le développeur confirme du temps restant au prochain `/iteration 8` ; sinon le build s'arrête ici, sur une version stable (itérations 1 à 7).
 2. Page de confirmation après le don, avec affichage statique du niveau de fidélité (étape 4 du scénario idéal du PRD, au-delà du simple bouton « Accéder au don » posé en itérations 6 et 8).
 3. Contenu réel des profils testateur et organisateur (version suivante, hors hackathon sauf décision contraire des cadreurs — aucun argument n'est fourni dans la passation pour ces deux profils, à la différence de particulier/entreprise).

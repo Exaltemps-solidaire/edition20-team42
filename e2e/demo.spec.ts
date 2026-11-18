@@ -7,11 +7,16 @@ test("Démo : le cas passant", async ({ page }) => {
     await expect(page.locator("body")).toBeVisible();
   });
 
-  await test.step("Je choisis le profil particulier et je m'authentifie", async () => {
+  await test.step("Je choisis le profil particulier et je me connecte", async () => {
     await page.getByRole("button", { name: "PARTICULIER", exact: true }).click();
     await page.getByLabel("Votre nom").fill("Camille");
-    await page.getByRole("button", { name: "Continuer" }).click();
+    await page.getByRole("button", { name: "Se connecter" }).click();
     await expect(page.getByRole("button", { name: /Se déconnecter/ })).toBeVisible();
+  });
+
+  await test.step("Je ne vois que mon profil dans le header, pas les 3 autres", async () => {
+    await expect(page.getByRole("banner").getByText("PARTICULIER", { exact: true })).toBeVisible();
+    await expect(page.getByRole("banner").getByRole("button", { name: "TESTATEUR" })).toHaveCount(0);
   });
 
   await test.step("Je vois la barre de navigation du site, fidèle au croquis", async () => {
@@ -24,8 +29,11 @@ test("Démo : le cas passant", async ({ page }) => {
     await expect(page.getByRole("button", { name: "Accéder au don" })).toBeVisible();
   });
 
-  await test.step("Je regarde le profil TESTATEUR, sans contenu pour l'instant", async () => {
+  await test.step("Je me déconnecte et je regarde le profil TESTATEUR, sans contenu pour l'instant", async () => {
+    await page.getByRole("button", { name: /Se déconnecter/ }).click();
     await page.getByRole("button", { name: "TESTATEUR" }).click();
+    await page.getByLabel("Votre nom").fill("Julien");
+    await page.getByRole("button", { name: "Se connecter" }).click();
     await expect(page.getByText("Cette page arrive dans une prochaine version.")).toBeVisible();
   });
 
@@ -33,7 +41,7 @@ test("Démo : le cas passant", async ({ page }) => {
     await page.getByRole("button", { name: /Se déconnecter/ }).click();
     await page.getByRole("button", { name: "ORGANISATEUR", exact: true }).click();
     await page.getByLabel("Votre nom").fill("Une structure partenaire");
-    await page.getByRole("button", { name: "Continuer" }).click();
+    await page.getByRole("button", { name: "Se connecter" }).click();
     await expect(page.getByText("Cette page arrive dans une prochaine version.")).toBeVisible();
   });
 });

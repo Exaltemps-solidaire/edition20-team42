@@ -44,7 +44,7 @@ export default function Home() {
               <label htmlFor="nom">Votre nom</label>
               <input id="nom" value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Votre nom" />
               <button type="submit" disabled={!peutContinuer(nom)}>
-                Continuer
+                Se connecter
               </button>
             </form>
           )}
@@ -57,17 +57,7 @@ export default function Home() {
     <div className={styles.page}>
       <header className={styles.header}>
         <span className={styles.marque}>Imagine for Margo</span>
-        <nav className={styles.profils}>
-          {PROFILS.map((p) => (
-            <button
-              key={p.id}
-              className={profilActif === p.id ? styles.profilActif : styles.profilBouton}
-              onClick={() => setProfilActif(p.id)}
-            >
-              {p.etiquette}
-            </button>
-          ))}
-        </nav>
+        <span className={styles.profilActif}>{PROFILS.find((p) => p.id === profilActif)?.etiquette}</span>
         <button
           className={styles.changerPersona}
           onClick={() => {
