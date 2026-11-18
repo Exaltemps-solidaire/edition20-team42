@@ -266,7 +266,18 @@
 - **Fichiers prévus** : `frontend/src/app/page.tsx` (nouvel état d'étape remplaçant le simple booléen `authentifie`), `e2e/demo.spec.ts` (ajout de l'étape « clic sur Se connecter depuis le mock » avant le choix de profil). (2 fichiers)
 - **Tests unitaires prévus** : aucun nouveau — changement de balisage et d'enchaînement d'écrans, pas de nouvelle logique métier (comme en itération 7).
 - **Étapes ajoutées à la démo** : ouverture de l'application → vérifier le mock et le bouton « Se connecter » → cliquer → arriver sur le choix de profil (étapes existantes inchangées ensuite).
-- **Bilan** : _à remplir en fin d'itération (durée de codage réelle, dépassement éventuel, fait, reporté, modifications fichier par fichier)_
+- **Bilan** :
+  - Codage réel : < 1 minute (chrono à 0 min), aucun dépassement.
+  - Les 3 critères d'acceptation sont satisfaits : premier écran = mock du site (logo, rubriques, « FAIRE UN DON ») + bouton « Se connecter » ; clic → écran de choix de profil ; connexion validée → contenu par profil inchangé (header à profil unique, arguments particulier), sans régression.
+  - Pas de nouveau test unitaire (changement d'enchaînement d'écrans, pas de nouvelle logique métier, comme prévu) ; les 9 tests existants passent toujours. `./scripts/verifier-deployabilite.sh` : aucune borne franchie.
+  - Déployé (frontend uniquement, API inchangée) : `localhost:8080/`, `/health`, `/sante` et `localhost:8081/health` répondent tous 200.
+  - Démo mise à jour : nouvelle étape d'ouverture sur le mock + clic « Se connecter », et chaque déconnexion repasse maintenant par le mock avant de choisir un nouveau profil ; rejouée avec succès.
+  - Version 8 signalée à PM Lab, rien bloqué par le harnais.
+  - Reporté : la page entreprise réelle (itération 9) toujours pas codée, faute de temps (< 10 minutes annoncées au début de cette itération, probablement épuisées par cette publication).
+  - ⚠️ **À valider par les cadreurs** : c'est la 3e disposition de l'écran d'entrée en 3 itérations (persona fictif → choix direct → mock + login). Pas de retour cadreur explicite sur celle-ci, contrairement aux deux précédentes — à confirmer au prochain tour de test.
+  - **Modifications** :
+    - `frontend/src/app/page.tsx` : remplacement du booléen `authentifie` par un état à 3 étapes (`mock` / `profil` / `connecte`) ; nouvel écran `mock` reprenant le site-nav de l'itération 4 avec un bouton « Se connecter » ; la déconnexion ramène à l'étape `mock` au lieu de l'étape `profil` — sert les 3 critères.
+    - `e2e/demo.spec.ts` : étapes ajoutées pour le mock et le clic « Se connecter » ; chaque déconnexion dans la démo repasse par le mock avant de choisir un nouveau profil.
 
 ---
 
