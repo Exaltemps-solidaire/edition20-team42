@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 test("Démo : le cas passant", async ({ page }) => {
   await test.step("J'ouvre l'application et je vois le mock du vrai site", async () => {
     await page.goto("/");
-    await expect(page.getByRole("button", { name: "FAIRE UN DON" })).toBeVisible();
+    await expect(page.getByText("Imagine for Margo")).toHaveCount(1);
     await expect(page.getByRole("button", { name: "Se connecter" })).toBeVisible();
   });
 
@@ -25,9 +25,8 @@ test("Démo : le cas passant", async ({ page }) => {
     await expect(page.getByRole("banner").getByRole("button", { name: "TESTATEUR" })).toHaveCount(0);
   });
 
-  await test.step("Je vois la barre de navigation du site, fidèle au croquis", async () => {
-    await expect(page.getByText("Imagine for Margo").last()).toBeVisible();
-    await expect(page.getByRole("button", { name: "FAIRE UN DON" })).toBeVisible();
+  await test.step("Je ne vois qu'un seul header, avec « Imagine for Margo » une seule fois", async () => {
+    await expect(page.getByText("Imagine for Margo")).toHaveCount(1);
   });
 
   await test.step("Je vois les arguments du PRD pour le particulier et le bouton de don", async () => {
@@ -37,7 +36,7 @@ test("Démo : le cas passant", async ({ page }) => {
 
   await test.step("Je me déconnecte, je repasse par le mock, et je vois les arguments du PRD pour l'entreprise", async () => {
     await page.getByRole("button", { name: /Se déconnecter/ }).click();
-    await expect(page.getByRole("button", { name: "FAIRE UN DON" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Se connecter" })).toBeVisible();
     await page.getByRole("button", { name: "Se connecter" }).click();
     await page.getByRole("button", { name: "ENTREPRISE", exact: true }).click();
     await page.getByLabel("Votre nom").fill("Une entreprise partenaire");

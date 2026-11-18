@@ -329,7 +329,19 @@
 - **Fichiers prévus** : `frontend/src/app/page.tsx` (header unique), `frontend/src/app/page.module.css` (styles consolidés), `e2e/demo.spec.ts` (le bouton « FAIRE UN DON » disparaît des assertions). (3 fichiers)
 - **Tests unitaires prévus** : aucun nouveau — changement de balisage/CSS pur, pas de nouvelle logique métier.
 - **Étapes ajoutées à la démo** : aucune nouvelle étape ; les étapes existantes qui vérifiaient « FAIRE UN DON » sont retirées ou adaptées.
-- **Bilan** : _à remplir en fin d'itération (durée de codage réelle, dépassement éventuel, fait, reporté, modifications fichier par fichier)_
+- **Bilan** :
+  - Codage réel : 4 minutes, sans dépassement (budget de 8 minutes non atteint, pas de question d'alarme nécessaire).
+  - Les 3 critères d'acceptation sont satisfaits : un seul « Imagine for Margo » sur les 3 écrans, « Se connecter » dans le header côté mock sans bouton « FAIRE UN DON », header avec profil actif + « Se déconnecter » côté connecté et « Accéder au don » toujours présent et fonctionnel.
+  - Tests : aucun nouveau test (balisage/CSS pur, confirmé) ; `npm test` passe toujours avec 10 tests (2 API + 8 front).
+  - Contrat de déployabilité : `./scripts/verifier-deployabilite.sh` → « aucune borne franchie ».
+  - Déploiement : image frontend reconstruite et republiée, conteneur recréé (`podman ps` confirme `Up`), `localhost:8080/`, `/health`, `/sante` et `localhost:8081/health` répondent tous 200 ; vérifié aussi que « Imagine for Margo » n'apparaît plus qu'une fois dans le HTML servi.
+  - Démo : `e2e/demo.spec.ts` mis à jour (assertions « FAIRE UN DON » retirées/remplacées par une vérification du header unique) et rejouée avec succès (1 passed).
+  - Version 10 signalée à PM Lab avec succès (aucun blocage du harnais).
+  - Rien de reporté : l'itération était un correctif de design ciblé, entièrement traité dans son périmètre.
+  - **Modifications** :
+    - `frontend/src/app/page.tsx` : extraction d'un composant `SiteHeader` partagé par les 3 écrans (`mock`, `profil`, `connecte`), affichant la marque et les rubriques une seule fois ; le bouton « Se connecter » rejoint ce header côté mock, le profil actif + « Se déconnecter » rejoignent ce header côté connecté ; suppression du `<nav className={styles.siteNav}>` dupliqué et du bouton « FAIRE UN DON ». Sert les 3 critères d'acceptation.
+    - `frontend/src/app/page.module.css` : suppression des styles devenus inutiles (`.profils`, `.siteNav`, `.siteLogo`), ajout de `.headerActions` pour aligner les actions à droite du header unique, `.marque` reprend la couleur d'accent de l'ancien `.siteLogo`. Sert le critère d'un header visuellement cohérent sur les 3 écrans.
+    - `e2e/demo.spec.ts` : retrait des assertions sur le bouton « FAIRE UN DON » (disparu), ajout d'une vérification que « Imagine for Margo » n'apparaît qu'une fois sur l'écran mock et sur l'écran connecté. Sert le critère du header unique.
 
 ---
 

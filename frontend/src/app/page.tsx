@@ -8,6 +8,20 @@ const RUBRIQUES = ["L'ASSOCIATION", "LES COURSES", "LE CANCER DES ENFANTS", "LA 
 
 type Etape = "mock" | "profil" | "connecte";
 
+function SiteHeader({ actions }: { actions?: React.ReactNode }) {
+  return (
+    <header className={styles.header}>
+      <span className={styles.marque}>Imagine for Margo</span>
+      <ul className={styles.rubriques}>
+        {RUBRIQUES.map((rubrique) => (
+          <li key={rubrique}>{rubrique}</li>
+        ))}
+      </ul>
+      <div className={styles.headerActions}>{actions}</div>
+    </header>
+  );
+}
+
 export default function Home() {
   const [etape, setEtape] = useState<Etape>("mock");
   const [profilChoisi, setProfilChoisi] = useState<Profil | null>(null);
@@ -17,21 +31,16 @@ export default function Home() {
   if (etape === "mock") {
     return (
       <div className={styles.page}>
-        <nav className={styles.siteNav} aria-label="Navigation du site (démo, liens inertes)">
-          <span className={styles.siteLogo}>Imagine for Margo</span>
-          <ul className={styles.rubriques}>
-            {RUBRIQUES.map((rubrique) => (
-              <li key={rubrique}>{rubrique}</li>
-            ))}
-          </ul>
-          <button className={styles.faireUnDon}>FAIRE UN DON</button>
-        </nav>
+        <SiteHeader
+          actions={
+            <button className={styles.faireUnDon} onClick={() => setEtape("profil")}>
+              Se connecter
+            </button>
+          }
+        />
         <main className={styles.main}>
           <h1>Mobilisons-nous contre le cancer des enfants</h1>
           <p>Connectez-vous pour accéder à votre parcours, adapté à votre profil.</p>
-          <button className={styles.faireUnDon} onClick={() => setEtape("profil")}>
-            Se connecter
-          </button>
         </main>
       </div>
     );
@@ -40,6 +49,7 @@ export default function Home() {
   if (etape === "profil") {
     return (
       <div className={styles.page}>
+        <SiteHeader />
         <main className={styles.main}>
           <h1>Choisissez votre profil</h1>
           <p>Sélectionnez le profil qui vous correspond pour accéder à votre parcours.</p>
@@ -80,29 +90,23 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <span className={styles.marque}>Imagine for Margo</span>
-        <span className={styles.profilActif}>{PROFILS.find((p) => p.id === profilActif)?.etiquette}</span>
-        <button
-          className={styles.changerPersona}
-          onClick={() => {
-            setEtape("mock");
-            setProfilChoisi(null);
-            setNom("");
-          }}
-        >
-          Se déconnecter ({nom})
-        </button>
-      </header>
-      <nav className={styles.siteNav} aria-label="Navigation du site (démo, liens inertes)">
-        <span className={styles.siteLogo}>Imagine for Margo</span>
-        <ul className={styles.rubriques}>
-          {RUBRIQUES.map((rubrique) => (
-            <li key={rubrique}>{rubrique}</li>
-          ))}
-        </ul>
-        <button className={styles.faireUnDon}>FAIRE UN DON</button>
-      </nav>
+      <SiteHeader
+        actions={
+          <>
+            <span className={styles.profilActif}>{PROFILS.find((p) => p.id === profilActif)?.etiquette}</span>
+            <button
+              className={styles.changerPersona}
+              onClick={() => {
+                setEtape("mock");
+                setProfilChoisi(null);
+                setNom("");
+              }}
+            >
+              Se déconnecter ({nom})
+            </button>
+          </>
+        }
+      />
       <main className={styles.main}>
         <h1>Mobilisons-nous contre le cancer des enfants</h1>
         {argumentsDuProfil(profilActif) ? (

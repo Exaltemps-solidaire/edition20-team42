@@ -26,12 +26,13 @@
 
 .marque {
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--accent);
 }
 
-.profils {
+.headerActions {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 16px;
 }
 
 .profilBouton,
@@ -57,22 +58,6 @@
   color: var(--text-secondary);
   cursor: pointer;
   text-decoration: underline;
-}
-
-.siteNav {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 12px 24px;
-  background-color: var(--foreground);
-  border-bottom: 1px solid #ebebeb;
-}
-
-.siteLogo {
-  font-weight: 700;
-  color: var(--accent);
 }
 
 .rubriques {
