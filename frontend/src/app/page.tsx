@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PERSONAS, trouverPersona, type Profil } from "./personas";
+import { PERSONAS, PROFILS, estProfilDisponible, trouverPersona, type Profil } from "./personas";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -41,18 +41,15 @@ export default function Home() {
       <header className={styles.header}>
         <span className={styles.marque}>Imagine for Margo</span>
         <nav className={styles.profils}>
-          <button
-            className={profilActif === "particulier" ? styles.profilActif : styles.profilBouton}
-            onClick={() => setProfilActif("particulier")}
-          >
-            PARTICULIER
-          </button>
-          <button
-            className={profilActif === "entreprise" ? styles.profilActif : styles.profilBouton}
-            onClick={() => setProfilActif("entreprise")}
-          >
-            ENTREPRISE
-          </button>
+          {PROFILS.map((p) => (
+            <button
+              key={p.id}
+              className={profilActif === p.id ? styles.profilActif : styles.profilBouton}
+              onClick={() => setProfilActif(p.id)}
+            >
+              {p.etiquette}
+            </button>
+          ))}
         </nav>
         <button className={styles.changerPersona} onClick={() => setPersonaId(null)}>
           Changer de persona ({persona.nom})
@@ -60,10 +57,14 @@ export default function Home() {
       </header>
       <main className={styles.main}>
         <h1>Mobilisons-nous contre le cancer des enfants</h1>
-        <p>
-          Vous êtes connecté·e en tant que {persona.role.toLowerCase()}. La page adaptée au profil{" "}
-          {profilActif === "particulier" ? "particulier" : "entreprise"} arrive dans une prochaine itération.
-        </p>
+        {estProfilDisponible(profilActif) ? (
+          <p>
+            Vous êtes connecté·e en tant que {persona.role.toLowerCase()}. La page adaptée au profil{" "}
+            {profilActif} arrive dans une prochaine itération.
+          </p>
+        ) : (
+          <p>Cette page arrive dans une prochaine version.</p>
+        )}
       </main>
     </div>
   );
