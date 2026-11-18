@@ -5,8 +5,9 @@
 - **Durée d'un tour de test PM Lab** : 5 minutes.
 - **Plan validé le 2026-11-18**, tel quel, au début de l'itération 1. Temps restant reconfirmé à ce moment : 50 minutes.
 - Temps restant reconfirmé au début de l'itération 2 : 45 minutes. Capacité restante pour les itérations 2+3+4 (~13+15+15 = 43 min) : tient de justesse, peu de marge.
-- Temps restant reconfirmé après le retour des cadreurs (2026-11-18) : **moins de 20 minutes**. ✂️ Ça ne tient plus qu'une itération complète (codage + ~5 min de publication + 5 min de tour de test) : les pages particulier/entreprise réelles (anciennes itérations 3 et 4) sont reportées en « À venir », non codées, et la dernière itération du build (ci-dessous, nouvelle Itération 3) couvre le retour des cadreurs et sert aussi de stabilisation finale pour le pitch.
-- **Capacité estimée** : chaque itération coûte au moins (codage ≤10 min) + publication (~5 min) + tour de test (5 min), soit 15 à 20 min. Sur les 50 minutes reconfirmées au début de l'itération 1, 3 itérations tenaient. L'ajout de l'itération 2 (boutons de header, demandée par le développeur) portait le plan à 4 itérations ; avec moins de 20 minutes restantes, le plan revient à **3 itérations réalisées** (1, 2, 3), le reste du scénario PRD étant reporté après le hackathon.
+- Temps restant reconfirmé après le retour des cadreurs (2026-11-18) : **moins de 20 minutes**. ✂️ Ça ne tenait plus qu'une itération complète : les pages particulier/entreprise réelles (anciennes itérations 3 et 4) sont reportées en « À venir », non codées, et l'itération 3 a couvert le retour des cadreurs + une stabilisation.
+- Temps restant reconfirmé au moment d'une nouvelle demande du développeur (barre de navigation du vrai site, écran 1) : **plus de 20 minutes**. Le build continue : nouvelle Itération 4, ci-dessous.
+- **Capacité estimée** : chaque itération coûte au moins (codage ≤10 min) + publication (~5 min) + tour de test (5 min), soit 15 à 20 min. Sur les 50 minutes reconfirmées au début de l'itération 1, 3 itérations tenaient. L'ajout de l'itération 2 (boutons de header, demandée par le développeur) portait le plan à 4 itérations ; le budget resserré a ramené le plan à 3 itérations réalisées (1, 2, 3) avant que du temps supplémentaire permette l'itération 4. Le reste du scénario PRD (pages particulier/entreprise réelles, confirmation) reste hors budget du hackathon.
 - **Hors périmètre pour tout le hackathon** (d'après `matiere/arbitrages.md` et le PRD, « Hors périmètre ») :
   - création de compte donateur (historique, avis fiscaux, paiements) ;
   - personnalisation via le CRM (newsletters/SMS adaptées) ;
@@ -119,6 +120,33 @@
     - `frontend/src/app/personas.test.ts` : tests mis à jour pour couvrir les 4 profils et un identifiant réellement inconnu — critère 2 (DoD).
     - `frontend/src/app/page.module.css` : `color` explicite ajoutée sur `.profilBouton` et `.personaBouton`, qui en manquaient — corrige le texte invisible en thème sombre (`color-scheme: dark`), signalé par le développeur — critère 3.
     - `e2e/demo.spec.ts` : étape « je choisis la structure organisatrice » ajoutée à la démo (hors DoD).
+
+---
+
+## Itération 4 : La barre de navigation du vrai site sur l'écran 1 (demande du développeur)
+
+- **Dans le périmètre** : sous la barre des 4 boutons de profil, une barre de navigation inerte fidèle à la description du croquis dans `cadrage/3-solution.md` — logo texte « Imagine for Margo », rubriques L'ASSOCIATION / LES COURSES / LE CANCER DES ENFANTS / LA RECHERCHE / NOUS AIDER (liens inertes, menu de démo), bouton « FAIRE UN DON » mis en avant en rose (même accent `#e4007c` que l'existant). Visible sur l'écran d'accueil (après choix du persona), pas sur l'écran « Qui êtes-vous ? ».
+- **Hors périmètre** : vrai logo/charte graphique de l'association (non fournis dans la passation, seulement décrits textuellement) ; vraies pages derrière les rubriques ; lien réel vers iRaiser pour « FAIRE UN DON » (toujours pas câblé, cf. itérations particulier/entreprise reportées).
+- **Critères d'acceptation** :
+  - Étant donné l'accueil, quand le visiteur le regarde, alors il voit la barre de navigation avec le logo et les 5 rubriques du croquis.
+  - Étant donné cette barre, alors le bouton « FAIRE UN DON » est visuellement mis en avant (couleur rose), comme noté dans l'interprétation du croquis.
+  - Étant donné cette itération, alors les 4 boutons de profil et le reste de l'accueil (itérations 1-3) ne régressent pas.
+- **Hypothèse de l'équipe couverte** : aucune — demande du développeur, pour la fidélité visuelle au croquis de l'écran 1 (déjà dans le PRD, non codée jusqu'ici).
+- **Codage estimé** : 5 minutes.
+- **Fichiers prévus** : `frontend/src/app/page.tsx` (nouvelle barre de navigation), `frontend/src/app/page.module.css` (styles). (~2 fichiers)
+- **Tests unitaires prévus** : aucun — balisage/présentation pure, pas de logique métier nouvelle (conforme à la DoD : pas de test sur du balisage pur).
+- **Étapes ajoutées à la démo** : vérification que la barre de navigation et le bouton « FAIRE UN DON » sont visibles sur l'accueil.
+- **Bilan** :
+  - Codage réel : moins d'1 minute (pas de dépassement).
+  - Les 3 critères d'acceptation sont satisfaits : barre de navigation avec logo et 5 rubriques visible sur l'accueil, bouton « FAIRE UN DON » mis en avant en rose (`--accent`), aucune régression sur les boutons de profil ni le reste de l'accueil.
+  - `npm test` : 7 tests passent (aucun nouveau test, balisage pur comme prévu). `npm run lint` : propre. `./scripts/verifier-deployabilite.sh` : aucune borne, aucune alarme.
+  - Déployé sur `localhost:8080` (frontend reconstruit et republié ; l'API n'a pas changé) ; `/health` et `/sante` répondent 200/ok. Version 4 signalée à PM Lab (`moteur_avance: false`, enregistrée).
+  - Rien de bloqué par le harnais.
+  - Reporté : rien de cette itération. Pas de vrai logo/charte (non fournis dans la passation), pas de vraies pages derrière les rubriques, pas de lien iRaiser réel sur « FAIRE UN DON » — explicitement hors périmètre de cette itération.
+  - **Modifications** :
+    - `frontend/src/app/page.tsx` : barre `<nav>` ajoutée sous le header (logo, 5 rubriques, bouton « FAIRE UN DON »), fidèle à la description du croquis dans `cadrage/3-solution.md` — critères 1, 2, 3.
+    - `frontend/src/app/page.module.css` : styles `.siteNav`, `.siteLogo`, `.rubriques`, `.faireUnDon` — critères 1 et 2.
+    - `e2e/demo.spec.ts` : étape « je vois la barre de navigation » ajoutée à la démo (hors DoD).
 
 ---
 

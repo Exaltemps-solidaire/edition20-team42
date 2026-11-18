@@ -12,6 +12,11 @@ test("Démo : le cas passant", async ({ page }) => {
     await expect(page.getByRole("button", { name: "PARTICULIER" })).toBeVisible();
   });
 
+  await test.step("Je vois la barre de navigation du site, fidèle au croquis", async () => {
+    await expect(page.getByText("Imagine for Margo").last()).toBeVisible();
+    await expect(page.getByRole("button", { name: "FAIRE UN DON" })).toBeVisible();
+  });
+
   await test.step("Je regarde le profil TESTATEUR, sans contenu pour l'instant", async () => {
     await page.getByRole("button", { name: "TESTATEUR" }).click();
     await expect(page.getByText("Cette page arrive dans une prochaine version.")).toBeVisible();

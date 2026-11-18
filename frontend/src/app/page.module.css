@@ -59,6 +59,43 @@
   text-decoration: underline;
 }
 
+.siteNav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 24px;
+  background-color: var(--foreground);
+  border-bottom: 1px solid #ebebeb;
+}
+
+.siteLogo {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.rubriques {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+}
+
+.faireUnDon {
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .main {
   display: flex;
   flex: 1;

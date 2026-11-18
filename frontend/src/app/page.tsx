@@ -4,6 +4,8 @@ import { useState } from "react";
 import { PERSONAS, PROFILS, estProfilDisponible, trouverPersona, type Profil } from "./personas";
 import styles from "./page.module.css";
 
+const RUBRIQUES = ["L'ASSOCIATION", "LES COURSES", "LE CANCER DES ENFANTS", "LA RECHERCHE", "NOUS AIDER"];
+
 export default function Home() {
   const [personaId, setPersonaId] = useState<string | null>(null);
   const [profilActif, setProfilActif] = useState<Profil>("particulier");
@@ -55,6 +57,15 @@ export default function Home() {
           Changer de persona ({persona.nom})
         </button>
       </header>
+      <nav className={styles.siteNav} aria-label="Navigation du site (démo, liens inertes)">
+        <span className={styles.siteLogo}>Imagine for Margo</span>
+        <ul className={styles.rubriques}>
+          {RUBRIQUES.map((rubrique) => (
+            <li key={rubrique}>{rubrique}</li>
+          ))}
+        </ul>
+        <button className={styles.faireUnDon}>FAIRE UN DON</button>
+      </nav>
       <main className={styles.main}>
         <h1>Mobilisons-nous contre le cancer des enfants</h1>
         {estProfilDisponible(profilActif) ? (
