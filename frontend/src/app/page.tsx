@@ -11,7 +11,7 @@ type Etape = "mock" | "profil" | "connecte";
 function SiteHeader({ actions }: { actions?: React.ReactNode }) {
   return (
     <header className={styles.header}>
-      <span className={styles.marque}>Imagine for Margo</span>
+      <img className={styles.marque} src="/logo-imagine-for-margo.svg" alt="Imagine for Margo" />
       <ul className={styles.rubriques}>
         {RUBRIQUES.map((rubrique) => (
           <li key={rubrique}>{rubrique}</li>
@@ -143,9 +143,6 @@ export default function Home() {
                 <li key={argument}>{argument}</li>
               ))}
             </ul>
-            <a className={styles.faireUnDon} href="#don">
-              Accéder au don
-            </a>
             <section id="don" className={styles.sectionDon}>
               <p>Formulaire de don (iRaiser) — lien à intégrer dès que l&apos;association nous le fournit.</p>
             </section>

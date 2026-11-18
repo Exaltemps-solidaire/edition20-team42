@@ -412,8 +412,43 @@
 
 ---
 
+## Itération 13 : vrai logo dans le header, retrait du bouton « Accéder au don » devenu redondant, polish lisibilité/hiérarchie/responsive (demande développeur)
+
+- Replanification du 2026-11-18 (nouvelle demande du développeur, après l'itération 12) : « rendre la page plus user friendly, et enlever le button accéder au don », puis « ajoute le logo d'Imagine for Margo ». ⚠️ Retirer « Accéder au don » n'est pas un conflit de fond : le bouton « FAIRE UN DON » du header (itération 12) pointe déjà vers la même ancre `#don`, donc c'était devenu un doublon. ❗️ Aucun fichier logo n'était fourni dans la passation (seulement une capture d'écran de croquis) ; le développeur a fourni `/srv/team42/app/logo-imagine-for-margo-desktop.svg`, copié tel quel (vérifié sans `<script>`) dans `frontend/public/logo-imagine-for-margo.svg`. ✂️ Avec moins de 10 minutes restantes, « plus user friendly » est réduit à 3 axes clarifiés avec le développeur (lisibilité/espacement, hiérarchie des boutons, responsive mobile), traités en CSS uniquement — un audit UX plus large est hors de portée du temps restant. Temps restant reconfirmé à ce moment : **moins de 10 minutes**.
+- **Dans le périmètre** :
+  - Le texte « Imagine for Margo » du header est remplacé par le vrai logo SVG fourni.
+  - Retrait du bouton « Accéder au don » du contenu profil (particulier/entreprise) ; « FAIRE UN DON » du header reste le seul point d'entrée vers `#don`.
+  - Polish CSS : plus d'espacement/line-height dans le contenu principal, « FAIRE UN DON » visuellement plus affirmé que les actions secondaires (déjà discrètes via `.changerPersona`), une media query pour que le header et la barre profil restent lisibles sur petit écran.
+- **Hors périmètre** : tout audit UX plus large (accessibilité, contrastes, parcours clavier) ; la vraie URL iRaiser (toujours `#don`) ; la page de confirmation/fidélité (en attente des cadreurs).
+- **Critères d'acceptation** :
+  - Étant donné n'importe lequel des 3 écrans, quand je regarde le header, alors je vois le vrai logo Imagine for Margo (plus le texte brut).
+  - Étant donné un profil avec du contenu (particulier/entreprise), quand je consulte la page, alors il n'y a plus qu'un seul chemin vers le don (« FAIRE UN DON » du header), plus de bouton « Accéder au don » dans le contenu.
+  - Étant donné un écran réduit à une largeur mobile courante (375px), quand j'ouvre la page, alors le header et la barre profil restent lisibles, sans chevauchement.
+- **Hypothèse de l'équipe couverte** : aucune, demande de design directement du développeur.
+- **Codage estimé** : 6 minutes (un asset + nettoyage de balisage + CSS, pas de nouvelle logique métier).
+- **Fichiers prévus** : `frontend/public/logo-imagine-for-margo.svg` (nouvel asset), `frontend/src/app/page.tsx` (logo + retrait du bouton), `frontend/src/app/page.module.css` (polish + media query), `e2e/demo.spec.ts` (retrait des assertions sur « Accéder au don »). (4 fichiers)
+- **Tests unitaires prévus** : aucun nouveau — balisage/CSS/asset statique, pas de nouvelle logique métier.
+- **Étapes ajoutées à la démo** : aucune nouvelle étape ; les assertions sur « Accéder au don » sont retirées.
+- **Bilan** :
+  - Codage réel : < 1 minute (sous le budget estimé de 6 minutes), pas de dépassement.
+  - Les 3 critères d'acceptation sont satisfaits : logo visible dans le header sur les 3 écrans, un seul chemin vers le don (bouton du header), header/barre profil lisibles à 375px (rubriques masquées en dessous de 480px pour laisser la place au logo et aux actions).
+  - 8 tests Vitest toujours au vert (`npm test`), aucun nouveau test : itération balisage/CSS/asset, pas de nouvelle logique métier.
+  - `./scripts/verifier-deployabilite.sh` : aucune borne.
+  - Déployé (frontend reconstruit, poussé, recréé) et vérifié : `localhost:8080/`, `/health`, `/sante`, `localhost:8081/health` répondent, et `localhost:8080/logo-imagine-for-margo.svg` répond 200.
+  - Démo Playwright (`e2e/demo.spec.ts`) : verte.
+  - Version 13 signalée à PM Lab.
+  - Rien de nouveau reporté au-delà de ce qui l'était déjà (voir « À venir »), si ce n'est l'audit UX plus large explicitement mis hors périmètre de cette itération.
+  - **Modifications** :
+    - `frontend/public/logo-imagine-for-margo.svg` (nouveau) : vrai logo fourni par le développeur, sert le critère « logo visible ».
+    - `frontend/src/app/page.tsx` : `SiteHeader` affiche désormais une `<img>` du logo au lieu du texte « Imagine for Margo » ; retrait du lien « Accéder au don » devenu redondant avec « FAIRE UN DON » du header.
+    - `frontend/src/app/page.module.css` : style du logo (`.marque` devient une contrainte de hauteur) ; espacement/line-height du contenu principal et du bloc don ; `.faireUnDon` renforcé visuellement (ombre portée) pour affirmer la hiérarchie face aux actions secondaires déjà discrètes ; media query `max-width: 480px` pour la lisibilité mobile (rubriques masquées, header/barre profil centrés, titres réduits).
+    - `e2e/demo.spec.ts` : les assertions sur « Accéder au don » sont retirées ; les assertions sur « Imagine for Margo » passent de `getByText` à `getByAltText`, le texte étant devenu l'attribut `alt` de l'image.
+
+---
+
 ## À venir
 
 1. Page de confirmation après le don, avec affichage statique du niveau de fidélité (scénario narratif de `7-prd.md`, au-delà du plan de livraison validé qui s'arrête à l'étape 4 — ⚠️ recoupe un point hors périmètre, à valider par les cadreurs avant d'être reprise).
 2. Contenu réel des profils testateur et organisateur (version suivante, hors hackathon sauf décision contraire des cadreurs — aucun argument n'est fourni dans la passation pour ces deux profils, à la différence de particulier/entreprise).
 3. Câblage d'une vraie URL iRaiser à la place de l'ancre `#don` posée en itération 11, dès qu'une adresse est fournie par l'équipe.
+4. Audit UX plus large (accessibilité, contrastes, navigation clavier), au-delà du polish CSS minimal posé en itération 13.
