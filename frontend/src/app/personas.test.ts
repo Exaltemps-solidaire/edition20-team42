@@ -1,20 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { PERSONAS, estProfilDisponible, trouverPersona } from "./personas";
+import { PROFILS, estProfilDisponible, peutContinuer } from "./personas";
 
-describe("trouverPersona", () => {
-  it("retrouve un persona par son identifiant", () => {
-    expect(trouverPersona("particulier")?.profil).toBe("particulier");
-    expect(trouverPersona("entreprise")?.profil).toBe("entreprise");
-    expect(trouverPersona("testateur")?.profil).toBe("testateur");
-    expect(trouverPersona("organisateur")?.profil).toBe("organisateur");
-  });
-
-  it("renvoie undefined pour un identifiant inconnu", () => {
-    expect(trouverPersona("inconnu")).toBeUndefined();
-  });
-
+describe("PROFILS", () => {
   it("propose les 4 profils du croquis de l'écran 1", () => {
-    expect(PERSONAS.map((p) => p.profil).sort()).toEqual([
+    expect(PROFILS.map((p) => p.id).sort()).toEqual([
       "entreprise",
       "organisateur",
       "particulier",
@@ -32,5 +21,16 @@ describe("estProfilDisponible", () => {
   it("est faux pour testateur et organisateur, sans contenu en V1", () => {
     expect(estProfilDisponible("testateur")).toBe(false);
     expect(estProfilDisponible("organisateur")).toBe(false);
+  });
+});
+
+describe("peutContinuer", () => {
+  it("est faux pour un nom vide ou blanc", () => {
+    expect(peutContinuer("")).toBe(false);
+    expect(peutContinuer("   ")).toBe(false);
+  });
+
+  it("est vrai pour un nom renseigné", () => {
+    expect(peutContinuer("Camille")).toBe(true);
   });
 });

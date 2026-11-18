@@ -156,18 +156,31 @@
 
 ## Itération 5 : Choix de profil direct + authentification simulée, à la place de l'écran « Qui êtes-vous ? » (retour cadreur)
 
-- **Dans le périmètre** : l'écran d'entrée affiche directement les 4 boutons de profil (PARTICULIER/ENTREPRISE/TESTATEUR/ORGANISATEUR, réutilisant `PROFILS`) à la place de la liste de personas fictifs. Après le choix d'un profil, un écran d'authentification **simulée** (un champ « Votre nom », pas de mot de passe, rien persisté, bouton « Continuer ») précède l'arrivée sur l'accueil déjà construit (header, barre de navigation, contenu par profil, placeholders testateur/organisateur inchangés).
+- Temps restant reconfirmé au début de cette itération (2026-11-18) : **moins de 15 minutes**. ✂️ Ça ne couvre plus codage (7 min estimées) + publication (~5 min) + tour de test (5 min) = ~17 min. Réduction proposée et appliquée : un **seul écran** (boutons de profil + petit formulaire « nom » affiché au clic, sans écran intermédiaire séparé) au lieu de deux écrans successifs, pour ramener le codage à ~4 minutes. Le reste du périmètre (critères d'acceptation) est inchangé.
+- **Dans le périmètre** : l'écran d'entrée affiche directement les 4 boutons de profil (PARTICULIER/ENTREPRISE/TESTATEUR/ORGANISATEUR, réutilisant `PROFILS`) à la place de la liste de personas fictifs. Cliquer sur un profil révèle, sur le même écran, un petit formulaire d'authentification **simulée** (un champ « Votre nom », pas de mot de passe, rien persisté, bouton « Continuer ») ; valider amène à l'accueil déjà construit (header, barre de navigation, contenu par profil, placeholders testateur/organisateur inchangés).
 - **Hors périmètre** : authentification réelle (compte, mot de passe, persistance en base) — reste hors périmètre du hackathon, comme déjà indiqué par le PRD ; les personas fictifs (Camille, Julien, Myriam, structure partenaire) disparaissent de l'écran d'entrée, remplacés par le choix direct de profil.
 - **Critères d'acceptation** :
   - Étant donné l'application démarrée, quand le visiteur arrive sur `/`, alors il voit directement les 4 boutons de profil, et non une liste de personas à incarner.
   - Étant donné un profil choisi, quand le visiteur renseigne son nom et valide l'authentification simulée, alors il arrive sur l'accueil adapté à ce profil, inchangé par ailleurs.
   - Étant donné cette itération, alors le header, la barre de navigation et le contenu déjà construits pour chaque profil ne régressent pas.
 - **Hypothèse de l'équipe couverte** : retour direct du cadreur (« la première page n'est pas forcément utile. L'objectif est de choisir son profil et de s'authentifier par la suite pour avoir un parcours qui colle au profil sélectionné »), clarifié avec le développeur : authentification simulée, écran de personas remplacé par le choix de profil direct.
-- **Codage estimé** : 7 minutes.
-- **Fichiers prévus** : `frontend/src/app/page.tsx` (nouvel enchaînement des écrans), `frontend/src/app/page.module.css` (styles du formulaire d'authentification), `frontend/src/app/personas.ts` (retrait de `PERSONAS`/`trouverPersona`, devenus inutiles ; `PROFILS`/`estProfilDisponible` conservés). (~3 fichiers)
+- **Codage estimé** : 4 minutes (réduit, voir ✂️ ci-dessus).
+- **Fichiers prévus** : `frontend/src/app/page.tsx` (écran unique : boutons de profil + formulaire), `frontend/src/app/page.module.css` (styles du formulaire d'authentification), `frontend/src/app/personas.ts` (retrait de `PERSONAS`/`trouverPersona`, devenus inutiles ; `PROFILS`/`estProfilDisponible` conservés). (~3 fichiers)
 - **Tests unitaires prévus** : 1 à 2, sur la validation du formulaire d'authentification simulée (ex. `peutContinuer(nom)` refuse un nom vide ou blanc).
-- **Étapes ajoutées à la démo** : ouverture de l'app → choix direct du profil PARTICULIER → authentification simulée (nom renseigné) → arrivée sur l'accueil ; remplace l'étape actuelle « je choisis d'être le particulier (Camille) ».
-- **Bilan** : _à remplir en fin d'itération (durée de codage réelle, dépassement éventuel, fait, reporté, modifications fichier par fichier)_
+- **Étapes ajoutées à la démo** : ouverture de l'app → choix direct du profil PARTICULIER → authentification simulée (nom renseigné sur le même écran) → arrivée sur l'accueil ; remplace l'étape actuelle « je choisis d'être le particulier (Camille) ».
+- **Bilan** :
+  - Codage réel : 1 minute (pas de dépassement ; la réduction à un écran unique, décidée avant de coder faute de temps, a largement tenu dans les 4 minutes estimées).
+  - Les 3 critères d'acceptation sont satisfaits : l'écran d'entrée affiche directement les 4 boutons de profil (plus de liste de personas), le formulaire d'authentification simulée (nom + Continuer) apparaît au clic sur un profil et mène à l'accueil adapté, le header/la barre de navigation/les placeholders existants ne régressent pas.
+  - `npm test` : 7 tests passent (2 API + 5 front, dont 2 nouveaux sur `peutContinuer`, et le test `PERSONAS` remplacé par un test sur `PROFILS`). `npm run lint` : propre. `./scripts/verifier-deployabilite.sh` : aucune borne, aucune alarme.
+  - Déployé sur `localhost:8080` (frontend reconstruit et republié ; l'API n'a pas changé) ; `/health`, `/sante` (8080) et `/health` (8081) répondent 200/ok. Démo Playwright mise à jour et rejouée avec succès (`BASE_URL=http://localhost:8080`). Version 5 signalée à PM Lab (`moteur_avance: false`, enregistrée).
+  - Rien de bloqué par le harnais.
+  - Reporté : rien de cette itération. L'authentification réelle (compte, mot de passe, persistance) reste hors périmètre, comme précisé avec le développeur avant de coder.
+  - **Modifications** :
+    - `frontend/src/app/personas.ts` : retrait de `Persona`/`PERSONAS`/`trouverPersona` (plus utilisés), ajout de `peutContinuer` (validation du nom pour l'authentification simulée) — critères 1 et 2.
+    - `frontend/src/app/personas.test.ts` : test `PERSONAS` remplacé par un test sur `PROFILS` (toujours les 4 profils), 2 tests ajoutés sur `peutContinuer` — critère 2 (DoD).
+    - `frontend/src/app/page.tsx` : écran d'entrée unique (choix de profil + formulaire de nom affiché au clic), header mis à jour (« Se déconnecter (nom) » au lieu de « Changer de persona ») — critères 1, 2 et 3.
+    - `frontend/src/app/page.module.css` : styles `.authForm` pour le formulaire d'authentification simulée — critère 1.
+    - `e2e/demo.spec.ts` : étapes « je choisis le profil particulier et je m'authentifie » et « je me déconnecte et je choisis le profil organisateur » mises à jour pour le nouveau parcours (hors DoD).
 
 ---
 

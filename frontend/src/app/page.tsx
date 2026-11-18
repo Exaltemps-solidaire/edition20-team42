@@ -1,38 +1,53 @@
 "use client";
 
 import { useState } from "react";
-import { PERSONAS, PROFILS, estProfilDisponible, trouverPersona, type Profil } from "./personas";
+import { PROFILS, estProfilDisponible, peutContinuer, type Profil } from "./personas";
 import styles from "./page.module.css";
 
 const RUBRIQUES = ["L'ASSOCIATION", "LES COURSES", "LE CANCER DES ENFANTS", "LA RECHERCHE", "NOUS AIDER"];
 
 export default function Home() {
-  const [personaId, setPersonaId] = useState<string | null>(null);
+  const [profilChoisi, setProfilChoisi] = useState<Profil | null>(null);
+  const [nom, setNom] = useState("");
+  const [authentifie, setAuthentifie] = useState(false);
   const [profilActif, setProfilActif] = useState<Profil>("particulier");
 
-  const persona = personaId ? trouverPersona(personaId) : undefined;
-
-  if (!persona) {
+  if (!authentifie) {
     return (
       <div className={styles.page}>
         <main className={styles.main}>
-          <h1>Qui êtes-vous ?</h1>
-          <p>Choisissez la personne que vous incarnez pour tester le site.</p>
+          <h1>Choisissez votre profil</h1>
+          <p>Sélectionnez le profil qui vous correspond pour accéder à votre parcours.</p>
           <ul className={styles.personas}>
-            {PERSONAS.map((p) => (
+            {PROFILS.map((p) => (
               <li key={p.id}>
                 <button
-                  className={styles.personaBouton}
-                  onClick={() => {
-                    setPersonaId(p.id);
-                    setProfilActif(p.profil);
-                  }}
+                  className={profilChoisi === p.id ? styles.profilActif : styles.personaBouton}
+                  onClick={() => setProfilChoisi(p.id)}
                 >
-                  {p.nom} — {p.role}
+                  {p.etiquette}
                 </button>
               </li>
             ))}
           </ul>
+          {profilChoisi && (
+            <form
+              className={styles.authForm}
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (peutContinuer(nom)) {
+                  setProfilActif(profilChoisi);
+                  setAuthentifie(true);
+                }
+              }}
+            >
+              <label htmlFor="nom">Votre nom</label>
+              <input id="nom" value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Votre nom" />
+              <button type="submit" disabled={!peutContinuer(nom)}>
+                Continuer
+              </button>
+            </form>
+          )}
         </main>
       </div>
     );
@@ -53,8 +68,15 @@ export default function Home() {
             </button>
           ))}
         </nav>
-        <button className={styles.changerPersona} onClick={() => setPersonaId(null)}>
-          Changer de persona ({persona.nom})
+        <button
+          className={styles.changerPersona}
+          onClick={() => {
+            setAuthentifie(false);
+            setProfilChoisi(null);
+            setNom("");
+          }}
+        >
+          Se déconnecter ({nom})
         </button>
       </header>
       <nav className={styles.siteNav} aria-label="Navigation du site (démo, liens inertes)">
@@ -70,8 +92,7 @@ export default function Home() {
         <h1>Mobilisons-nous contre le cancer des enfants</h1>
         {estProfilDisponible(profilActif) ? (
           <p>
-            Vous êtes connecté·e en tant que {persona.role.toLowerCase()}. La page adaptée au profil{" "}
-            {profilActif} arrive dans une prochaine itération.
+            Bonjour {nom}. La page adaptée au profil {profilActif} arrive dans une prochaine itération.
           </p>
         ) : (
           <p>Cette page arrive dans une prochaine version.</p>

@@ -143,3 +143,37 @@
 .personaBouton:hover {
   border-color: var(--accent);
 }
+
+.authForm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.authForm label {
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.authForm input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ebebeb;
+  font-size: 14px;
+}
+
+.authForm button {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.authForm button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
