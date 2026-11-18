@@ -11,6 +11,7 @@
 - ⚠️ **Correction de la source du plan** : un plan de l'équipe existe bien dans la passation, `passation/cadrage/6-plan-de-livraison.md` — il n'a pas été trouvé plus tôt car il ne s'appelle pas `*iteration*`. Il liste 4 étapes : choix du profil, page particulier, page entreprise, accès au don (bouton iRaiser sur chaque page). Les itérations déjà réalisées (1 à 4) et celles détaillées ci-dessous (5 et 6) suivent exactement cet ordre ; aucune reprise rétroactive n'est nécessaire, mais ce plan fait désormais foi pour la suite plutôt que l'ordre proposé par l'agent seul.
 - **Capacité estimée** : chaque itération coûte au moins (codage ≤10 min) + publication (~5 min) + tour de test (5 min), soit 15 à 20 min. Sur les 50 minutes reconfirmées au début de l'itération 1, 3 itérations tenaient. L'ajout de l'itération 2 (boutons de header, demandée par le développeur) portait le plan à 4 itérations ; le budget resserré a ramené le plan à 3 itérations réalisées (1, 2, 3) avant que du temps supplémentaire permette l'itération 4, puis la replanification à plus de 30 minutes restantes. Avec plus de 30 minutes et des itérations réalisées jusqu'ici très courtes (1 minute ou moins de codage réel à chaque fois), 3 itérations supplémentaires (5, 6, 7) tiennent avec de la marge ; la page de confirmation et le contenu testateur/organisateur restent en « À venir », à détailler à la prochaine replanification si le temps le permet encore.
 - Replanification du 2026-11-18 (retour cadreur sur l'écran d'entrée) : le cadreur signale « la première page n'est pas forcément utile. L'objectif est de choisir son profil et de s'authentifier par la suite pour avoir un parcours qui colle au profil sélectionné. » ⚠️ Ce retour contredit une décision explicite du PRD (`cadrage/7-prd.md`, « Les utilisateurs : pas de connexion » : « Ne codez ni connexion, ni création de comptes, ni mot de passe ») qui avait justement fait remplacer toute authentification par l'écran « Qui êtes-vous ? ». Clarifié avec le développeur avant de coder : (1) authentification **simulée** (un formulaire léger, sans compte ni mot de passe réels, rien persisté) et non une authentification réelle, qui resterait hors périmètre ; (2) l'écran « Qui êtes-vous ? » (personas fictifs) est remplacé par le choix de profil direct (PARTICULIER/ENTREPRISE/TESTATEUR/ORGANISATEUR), suivi de cette authentification simulée. Temps restant reconfirmé à ce moment : **plus de 30 minutes**. Taillé en nouvelle **Itération 5**, insérée avant les pages de contenu : les anciennes itérations 5 et 6 (pages particulier/entreprise réelles) deviennent 6 et 7, inchangées par ailleurs.
+- Replanification du 2026-11-18 (nouveau retour cadreur, après l'itération 6) : « il faut avoir un bouton login dans la page d'accueil et selon le profil ça va te rediriger vers la bonne page, et avoir que le profil sélectionné dans le header ». ⚠️ Ce retour modifie un comportement déjà livré en itération 5 : aujourd'hui, une fois connecté, le header affiche les **4 boutons de profil** et permet de basculer de l'un à l'autre sans se reconnecter — c'est précisément ce que « avoir que le profil sélectionné dans le header » supprime. Le routage vers le bon contenu selon le profil actif existe déjà (`profilActif`) ; interprété comme : renommer le bouton de validation de l'écran d'accueil en « Se connecter » (le bouton « login » demandé), et remplacer le header à 4 boutons par un badge du seul profil actif, la déconnexion restant le seul moyen d'en changer. Temps restant reconfirmé à ce moment : **moins de 15 minutes** — juste assez pour cette seule itération. ✂️ Elle devient donc la dernière itération de stabilisation avant le pitch : la page entreprise réelle (ancienne itération 7) est repoussée en « À venir », non garantie d'être codée. Taillée en nouvelle **Itération 7**, ci-dessous ; l'ancienne itération 7 (page entreprise) devient 8.
 - **Hors périmètre pour tout le hackathon** (d'après `matiere/arbitrages.md` et le PRD, « Hors périmètre ») :
   - création de compte donateur (historique, avis fiscaux, paiements) ;
   - **authentification réelle** (compte, mot de passe, persistance en base) : le retour du cadreur (itération 5) demande de passer par une authentification, clarifiée comme **simulée** (formulaire sans backend) — une vraie authentification resterait hors périmètre du hackathon, comme l'indique le PRD ;
@@ -216,7 +217,27 @@
 
 ---
 
-## Itération 7 : La page entreprise réelle (RSE, fiscalité du mécénat, badges)
+## Itération 7 : Bouton « Se connecter » et header limité au profil actif (retour cadreur)
+
+- **Dans le périmètre** :
+  - Sur l'écran d'accueil, le bouton qui valide le nom après choix du profil s'appelle « Se connecter » (au lieu de « Continuer ») — c'est le bouton « login » demandé.
+  - Une fois connecté, le header n'affiche plus les 4 boutons de profil permettant de basculer librement : il affiche seulement le profil actif (le même que celui choisi à la connexion), sous forme d'indication non cliquable. « Se déconnecter » reste le seul moyen de changer de profil (retour à l'écran d'accueil).
+  - Le contenu affiché continue de dépendre du profil actif (déjà en place depuis l'itération 5/6) : pas de changement de logique de routage, seulement de ce qui est cliquable dans le header.
+- **Hors périmètre** : écran de login séparé de l'écran de choix de profil (on garde un seul écran, juste le libellé du bouton change) ; tout changement du contenu des pages particulier/entreprise (itérations 6/8).
+- **Critères d'acceptation** :
+  - Étant donné l'écran d'accueil, quand j'ai choisi un profil et saisi mon nom, alors le bouton de validation s'appelle « Se connecter ».
+  - Étant donné que je suis connecté avec un profil, quand je regarde le header, alors je ne vois que ce profil, sans bouton pour basculer vers un autre sans me déconnecter.
+  - Étant donné un profil connecté, alors le contenu affiché reste celui du bon profil (pas de régression du routage existant).
+- **Hypothèse de l'équipe couverte** : retour cadreur direct (ci-dessus), pas une hypothèse déjà écrite dans la passation.
+- **Codage estimé** : 3 minutes (renommage + suppression de la nav, réutilise les classes CSS existantes).
+- **Fichiers prévus** : `frontend/src/app/page.tsx` (bouton + header), `frontend/src/app/page.module.css` (style du badge de profil actif remplaçant la nav), `e2e/demo.spec.ts` (la démo bascule actuellement de profil sans déconnexion — ex. PARTICULIER → TESTATEUR —, ce qui ne sera plus possible : à corriger pour déconnecter entre deux profils).
+- **Tests unitaires prévus** : aucun nouveau — changement de balisage pur (header, libellé de bouton), pas de nouvelle logique métier ; les tests existants (`peutContinuer`, `argumentsDuProfil`, `estProfilDisponible`) continuent de protéger la logique inchangée.
+- **Étapes ajoutées à la démo** : après connexion, vérifier qu'un seul profil est visible dans le header (pas de bouton vers les 3 autres) ; adapter l'étape qui regardait TESTATEUR pour passer par une déconnexion.
+- **Bilan** : _à remplir en fin d'itération (durée de codage réelle, dépassement éventuel, fait, reporté, modifications fichier par fichier)_
+
+---
+
+## Itération 8 : La page entreprise réelle (RSE, fiscalité du mécénat, badges)
 
 - **Dans le périmètre** : quand le profil actif est ENTREPRISE, l'accueil affiche les 3 arguments du scénario idéal du PRD pour ce profil — engagement RSE, avantages fiscaux du mécénat, badges de visibilité disponibles (texte statique, pas de badge réellement attribué) — suivis du même bouton « Accéder au don » inerte qu'en itération 6.
 - **Hors périmètre** : lien réel vers iRaiser ; badges réellement attribués ou partageables sur les réseaux sociaux ; page de confirmation post-don (« À venir »).
@@ -235,5 +256,6 @@
 
 ## À venir
 
-1. Page de confirmation après le don, avec affichage statique du niveau de fidélité (étape 4 du scénario idéal du PRD, au-delà du simple bouton « Accéder au don » posé en itérations 6 et 7).
-2. Contenu réel des profils testateur et organisateur (version suivante, hors hackathon sauf décision contraire des cadreurs — aucun argument n'est fourni dans la passation pour ces deux profils, à la différence de particulier/entreprise).
+1. La page entreprise réelle (itération 8, ancienne itération 7) — ✂️ reportée tant que le temps ne permet qu'une itération de stabilisation (itération 7).
+2. Page de confirmation après le don, avec affichage statique du niveau de fidélité (étape 4 du scénario idéal du PRD, au-delà du simple bouton « Accéder au don » posé en itérations 6 et 8).
+3. Contenu réel des profils testateur et organisateur (version suivante, hors hackathon sauf décision contraire des cadreurs — aucun argument n'est fourni dans la passation pour ces deux profils, à la différence de particulier/entreprise).
