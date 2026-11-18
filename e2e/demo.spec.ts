@@ -35,9 +35,19 @@ test("Démo : le cas passant", async ({ page }) => {
     await expect(page.getByRole("button", { name: "Accéder au don" })).toBeVisible();
   });
 
-  await test.step("Je me déconnecte, je repasse par le mock, et je regarde le profil TESTATEUR, sans contenu pour l'instant", async () => {
+  await test.step("Je me déconnecte, je repasse par le mock, et je vois les arguments du PRD pour l'entreprise", async () => {
     await page.getByRole("button", { name: /Se déconnecter/ }).click();
     await expect(page.getByRole("button", { name: "FAIRE UN DON" })).toBeVisible();
+    await page.getByRole("button", { name: "Se connecter" }).click();
+    await page.getByRole("button", { name: "ENTREPRISE", exact: true }).click();
+    await page.getByLabel("Votre nom").fill("Une entreprise partenaire");
+    await page.getByRole("button", { name: "Se connecter" }).click();
+    await expect(page.getByText("Engagement RSE")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Accéder au don" })).toBeVisible();
+  });
+
+  await test.step("Je me déconnecte et je regarde le profil TESTATEUR, sans contenu pour l'instant", async () => {
+    await page.getByRole("button", { name: /Se déconnecter/ }).click();
     await page.getByRole("button", { name: "Se connecter" }).click();
     await page.getByRole("button", { name: "TESTATEUR" }).click();
     await page.getByLabel("Votre nom").fill("Julien");

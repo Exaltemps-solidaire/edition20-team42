@@ -19,6 +19,11 @@ const ARGUMENTS_PAR_PROFIL: Partial<Record<Profil, string[]>> = {
     "Valorisation de l'engagement personnel et solidaire",
     "Présentation des niveaux de fidélité",
   ],
+  entreprise: [
+    "Engagement RSE",
+    "Avantages fiscaux du mécénat",
+    "Badges de visibilité disponibles",
+  ],
 };
 
 export function argumentsDuProfil(profil: Profil): string[] | undefined {

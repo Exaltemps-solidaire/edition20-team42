@@ -44,9 +44,16 @@ describe("argumentsDuProfil", () => {
     ]);
   });
 
-  it("renvoie undefined pour l'entreprise, le testateur et l'organisateur (pas encore de contenu)", () => {
-    expect(argumentsDuProfil("entreprise")).toBeUndefined();
+  it("renvoie undefined pour le testateur et l'organisateur (pas encore de contenu)", () => {
     expect(argumentsDuProfil("testateur")).toBeUndefined();
     expect(argumentsDuProfil("organisateur")).toBeUndefined();
+  });
+
+  it("renvoie les 3 arguments du PRD pour l'entreprise, sans mélange avec le particulier", () => {
+    expect(argumentsDuProfil("entreprise")).toEqual([
+      "Engagement RSE",
+      "Avantages fiscaux du mécénat",
+      "Badges de visibilité disponibles",
+    ]);
   });
 });

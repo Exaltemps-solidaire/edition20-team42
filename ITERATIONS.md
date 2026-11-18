@@ -291,15 +291,26 @@
   - Étant donné cette itération, alors PARTICULIER, TESTATEUR et ORGANISATEUR gardent leur comportement (pas de régression, en particulier la page particulier de l'itération 6).
 - **Hypothèse de l'équipe couverte** : étape 3 du plan de livraison de l'équipe, « Page entreprise » — « l'entreprise voit uniquement ce qui la concerne, sans arguments destinés aux particuliers ».
 - **Codage estimé** : 5 minutes (réutilise la structure posée en itération 6).
+- ⚠️ Temps restant reconfirmé au début de cette itération (2026-11-18) : **moins de 10 minutes**, comme en itérations 7 et 8. ✂️ Probablement sans marge pour un tour de test après publication : codage réduit au strict minimum (réutilisation telle quelle du motif `argumentsDuProfil`/rendu conditionnel posé en itération 6, sans nouveau fichier), et c'est vraisemblablement la dernière itération du build.
 - **Fichiers prévus** : `frontend/src/app/contenuProfils.ts` (ou `personas.ts` selon le choix fait en itération 6), `frontend/src/app/page.tsx`, `frontend/src/app/page.module.css` si besoin. (~2 à 3 fichiers)
 - **Tests unitaires prévus** : 1, sur `argumentsDuProfil("entreprise")` (3 arguments attendus, pas de mélange avec particulier).
 - **Étapes ajoutées à la démo** : depuis l'accueil en profil entreprise, vérification que les 3 arguments sont visibles.
-- **Bilan** : _à remplir en fin d'itération (durée de codage réelle, dépassement éventuel, fait, reporté, modifications fichier par fichier)_
+- **Bilan** :
+  - Codage réel : < 1 minute (chrono à 0 min), aucun dépassement.
+  - Les 3 critères d'acceptation sont satisfaits : les 3 arguments du PRD (RSE, avantages fiscaux du mécénat, badges de visibilité) et le bouton « Accéder au don » s'affichent pour ENTREPRISE ; PARTICULIER, TESTATEUR et ORGANISATEUR gardent leur comportement, sans régression.
+  - 10 tests passent (2 API + 8 front, dont le nouveau sur `argumentsDuProfil("entreprise")`). `./scripts/verifier-deployabilite.sh` : aucune borne franchie.
+  - Déployé (frontend uniquement, API inchangée) : `localhost:8080/`, `/health`, `/sante` et `localhost:8081/health` répondent tous 200.
+  - Démo mise à jour (nouvelle étape ENTREPRISE entre PARTICULIER et TESTATEUR) et rejouée avec succès.
+  - Version 9 signalée à PM Lab, rien bloqué par le harnais.
+  - Rien de reporté dans le périmètre propre de cette itération (lien réel iRaiser et page de confirmation post-don restent hors périmètre du hackathon, comme prévu). Les 4 profils du croquis ont maintenant tous un comportement défini : particulier et entreprise avec contenu réel, testateur et organisateur avec le placeholder « à venir ».
+  - **Modifications** :
+    - `frontend/src/app/personas.ts` : ajout de l'entrée `entreprise` dans `ARGUMENTS_PAR_PROFIL` — sert les 2 premiers critères, réutilise `argumentsDuProfil` sans changement de signature.
+    - `frontend/src/app/personas.test.ts` : nouveau test sur `argumentsDuProfil("entreprise")` — sert le critère de non-mélange avec le particulier.
+    - `e2e/demo.spec.ts` : nouvelle étape de démo sur le contenu entreprise, entre particulier et testateur.
 
 ---
 
 ## À venir
 
-1. La page entreprise réelle (itération 9, ancienne itération 7 puis 8) — ✂️ reportée à nouveau : le temps restant (moins de 10 minutes) a été consacré à l'itération 8 (mock en première page, demande du développeur). À ne lancer que si le développeur confirme du temps restant au prochain `/iteration 9` ; sinon le build s'arrête sur une version stable (itérations 1 à 8).
-2. Page de confirmation après le don, avec affichage statique du niveau de fidélité (étape 4 du scénario idéal du PRD, au-delà du simple bouton « Accéder au don » posé en itérations 6 et 9).
-3. Contenu réel des profils testateur et organisateur (version suivante, hors hackathon sauf décision contraire des cadreurs — aucun argument n'est fourni dans la passation pour ces deux profils, à la différence de particulier/entreprise).
+1. Page de confirmation après le don, avec affichage statique du niveau de fidélité (étape 4 du scénario idéal du PRD, au-delà du simple bouton « Accéder au don » posé en itérations 6 et 9).
+2. Contenu réel des profils testateur et organisateur (version suivante, hors hackathon sauf décision contraire des cadreurs — aucun argument n'est fourni dans la passation pour ces deux profils, à la différence de particulier/entreprise).
