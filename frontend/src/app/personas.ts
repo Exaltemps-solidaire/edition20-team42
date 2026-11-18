@@ -7,10 +7,13 @@ export type Persona = {
   profil: Profil;
 };
 
-// Les acteurs de la version 1 : testateur et organisateur n'ont pas encore de persona ni de contenu (voir ITERATIONS.md).
+// Les 4 profils du croquis sont représentés ici ; testateur et organisateur n'ont pas encore de contenu
+// une fois choisis (placeholder « à venir », voir ITERATIONS.md et estProfilDisponible).
 export const PERSONAS: Persona[] = [
   { id: "particulier", nom: "Camille", role: "Le particulier qui veut donner", profil: "particulier" },
   { id: "entreprise", nom: "Julien", role: "L'entreprise mécène", profil: "entreprise" },
+  { id: "testateur", nom: "Myriam", role: "La personne qui envisage un legs", profil: "testateur" },
+  { id: "organisateur", nom: "Une structure partenaire", role: "Organise une collecte", profil: "organisateur" },
 ];
 
 export function trouverPersona(id: string): Persona | undefined {

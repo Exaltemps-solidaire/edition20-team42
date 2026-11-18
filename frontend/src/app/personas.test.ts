@@ -5,14 +5,21 @@ describe("trouverPersona", () => {
   it("retrouve un persona par son identifiant", () => {
     expect(trouverPersona("particulier")?.profil).toBe("particulier");
     expect(trouverPersona("entreprise")?.profil).toBe("entreprise");
+    expect(trouverPersona("testateur")?.profil).toBe("testateur");
+    expect(trouverPersona("organisateur")?.profil).toBe("organisateur");
   });
 
   it("renvoie undefined pour un identifiant inconnu", () => {
-    expect(trouverPersona("testateur")).toBeUndefined();
+    expect(trouverPersona("inconnu")).toBeUndefined();
   });
 
-  it("ne propose que les profils couverts par la version 1", () => {
-    expect(PERSONAS.map((p) => p.profil).sort()).toEqual(["entreprise", "particulier"]);
+  it("propose les 4 profils du croquis de l'écran 1", () => {
+    expect(PERSONAS.map((p) => p.profil).sort()).toEqual([
+      "entreprise",
+      "organisateur",
+      "particulier",
+      "testateur",
+    ]);
   });
 });
 

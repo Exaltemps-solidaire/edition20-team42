@@ -5,7 +5,8 @@
 - **Durée d'un tour de test PM Lab** : 5 minutes.
 - **Plan validé le 2026-11-18**, tel quel, au début de l'itération 1. Temps restant reconfirmé à ce moment : 50 minutes.
 - Temps restant reconfirmé au début de l'itération 2 : 45 minutes. Capacité restante pour les itérations 2+3+4 (~13+15+15 = 43 min) : tient de justesse, peu de marge.
-- **Capacité estimée** : chaque itération coûte au moins (codage ≤10 min) + publication (~5 min) + tour de test (5 min), soit 15 à 20 min. Sur les 50 minutes reconfirmées au début de l'itération 1, 3 itérations tenaient. L'ajout de l'itération 2 (boutons de header, demandée par le développeur) porte le plan à **4 itérations**, ce qui dépasse l'estimation initiale de ~13 minutes : ✂️ à surveiller, le temps sera reconfirmé au début de chaque `/iteration` et une itération pourra être écourtée ou reportée si besoin.
+- Temps restant reconfirmé après le retour des cadreurs (2026-11-18) : **moins de 20 minutes**. ✂️ Ça ne tient plus qu'une itération complète (codage + ~5 min de publication + 5 min de tour de test) : les pages particulier/entreprise réelles (anciennes itérations 3 et 4) sont reportées en « À venir », non codées, et la dernière itération du build (ci-dessous, nouvelle Itération 3) couvre le retour des cadreurs et sert aussi de stabilisation finale pour le pitch.
+- **Capacité estimée** : chaque itération coûte au moins (codage ≤10 min) + publication (~5 min) + tour de test (5 min), soit 15 à 20 min. Sur les 50 minutes reconfirmées au début de l'itération 1, 3 itérations tenaient. L'ajout de l'itération 2 (boutons de header, demandée par le développeur) portait le plan à 4 itérations ; avec moins de 20 minutes restantes, le plan revient à **3 itérations réalisées** (1, 2, 3), le reste du scénario PRD étant reporté après le hackathon.
 - **Hors périmètre pour tout le hackathon** (d'après `matiere/arbitrages.md` et le PRD, « Hors périmètre ») :
   - création de compte donateur (historique, avis fiscaux, paiements) ;
   - personnalisation via le CRM (newsletters/SMS adaptées) ;
@@ -14,7 +15,9 @@
   - refonte du site existant, remplacement d'iRaiser ;
   - pop-up de relance.
 
-⚠️ **Changement de périmètre demandé par le développeur, hors plan initial** : le croquis de l'écran 1 montre 4 boutons de profil (particulier, entreprise, testateur, organisateur), alors que le PRD avait explicitement mis testateur/organisateur en « Hors périmètre » V1. Le développeur a choisi d'ajouter les 2 boutons manquants pour la fidélité visuelle au croquis, **sans contenu** (aucun argument n'étant fourni par la passation pour ces profils). Insérée en Itération 2, ci-dessous ; les itérations page particulier/page entreprise sont renumérotées 3 et 4. **À faire valider par les cadreurs** au prochain tour de test : c'est leur décision de « hors périmètre » qui est partiellement révisée.
+⚠️ **Changement de périmètre demandé par le développeur, hors plan initial** : le croquis de l'écran 1 montre 4 boutons de profil (particulier, entreprise, testateur, organisateur), alors que le PRD avait explicitement mis testateur/organisateur en « Hors périmètre » V1. Le développeur a choisi d'ajouter les 2 boutons manquants pour la fidélité visuelle au croquis, **sans contenu** (aucun argument n'étant fourni par la passation pour ces profils). Insérée en Itération 2, ci-dessous.
+
+✅ **Validé par les cadreurs au tour de test de l'itération 2** : leur retour (« sur la première page, il faut avoir les profils testateur et organisateur ») confirme la direction prise en itération 2 — mais porte sur l'écran « Qui êtes-vous ? » (l'écran réellement affiché en premier), qui ne proposait encore que 2 personas (Camille, Julien), le header à 4 boutons n'apparaissant qu'après ce choix. Traité en Itération 3, ci-dessous : 2 personas de plus sur cet écran, menant au même placeholder « à venir » que les boutons du header. Le **contenu réel** (arguments) reste hors périmètre, faute de matière dans la passation.
 
 ⚠️ `cadrage/5-hypotheses.md` et `matiere/arbitrages.md` sont vides (« Pas encore produit » / « Aucun vote consolidé »). Les critères d'acceptation ci-dessous sont donc dérivés du « scénario idéal » du PRD (`PASSATION.md`), pas d'un fichier d'hypothèses dédié — à confirmer avec les cadreurs si l'occasion se présente pendant un tour de test.
 
@@ -88,42 +91,39 @@
 
 ---
 
-## Itération 3 : La page particulier réelle
+## Itération 3 : Les profils testateur et organisateur sur l'écran « Qui êtes-vous ? » (retour des cadreurs) + stabilisation
 
-- **Dans le périmètre** : en cliquant sur PARTICULIER, affichage d'une page avec les 3 arguments du PRD (réduction d'impôt, engagement personnel et solidaire, niveaux de fidélité) et un bouton « Faire un don » vers iRaiser (URL externe en variable d'environnement, formulaire non remplacé).
-- **Hors périmètre** : la page entreprise (itération 4), la page de confirmation après le don.
+- **Dans le périmètre** :
+  - 2 personas de plus sur l'écran de choix (ex. un testateur, une structure organisatrice), menant comme les 2 existants à l'accueil — profil testateur/organisateur actif, donc placeholder « à venir » affiché immédiatement (comportement déjà posé en itération 2, pas de contenu inventé).
+  - ❗️ Correctif de régression signalé par le développeur (« les textes ne s'affichent pas sur la version PC ») : `.personaBouton` et `.profilBouton` dans `page.module.css` ne fixent pas de `color`, donc le texte prend la couleur de bouton par défaut du navigateur — invisible (texte clair sur fond clair) quand l'OS/navigateur est en thème sombre, à cause de `color-scheme: dark` posé dans `globals.css`. Fixer une couleur de texte explicite sur ces deux classes.
+  - Dernière itération du build : sert aussi à stabiliser ce qui sera montré au pitch.
+- **Hors périmètre** : tout contenu réel pour testateur/organisateur (toujours aucun argument dans la passation) ; les pages particulier/entreprise réelles, reportées après le hackathon (voir « À venir »).
 - **Critères d'acceptation** :
-  - Étant donné le profil PARTICULIER choisi, quand le visiteur arrive sur sa page, alors il voit les 3 arguments particuliers du PRD.
-  - Étant donné cette page, quand il clique sur « Faire un don », alors il est orienté vers le formulaire iRaiser (lien externe, via variable d'environnement).
-  - Étant donné cette page, alors aucun argument destiné aux entreprises n'y apparaît.
-- **Hypothèse de l'équipe couverte** : aucune (fichier vide) — couvre l'étape 2 du scénario idéal (« page adaptée au profil particulier »).
-- **Codage estimé** : 5 minutes.
-- **Fichiers prévus** : une page/route particulier, mise à jour du header/routing, `.env.example` (ajout de l'URL iRaiser). (~3 fichiers)
-- **Tests unitaires prévus** : 1, sur le contenu/choix des arguments affichés selon le profil.
-- **Étapes ajoutées à la démo** : clic sur PARTICULIER → vérification des arguments → clic sur « Faire un don ».
-- **Bilan** : _à remplir en fin d'itération_
-
----
-
-## Itération 4 : La page entreprise réelle
-
-- **Dans le périmètre** : en cliquant sur ENTREPRISE, affichage d'une page avec les arguments du PRD pour les mécènes (RSE, avantages fiscaux du mécénat, badges de visibilité) et le même bouton « Faire un don » vers iRaiser.
-- **Hors périmètre** : la page de confirmation avec niveau de fidélité.
-- **Critères d'acceptation** :
-  - Étant donné le profil ENTREPRISE choisi, quand le visiteur arrive sur sa page, alors il voit les arguments RSE / fiscalité du mécénat / badges.
-  - Étant donné cette page, quand il clique sur « Faire un don », alors il est orienté vers le formulaire iRaiser.
-  - Étant donné cette page, alors aucun argument destiné aux particuliers n'y apparaît.
-- **Hypothèse de l'équipe couverte** : aucune (fichier vide) — couvre l'étape 2bis du scénario idéal (« page adaptée au profil entreprise »).
-- **Codage estimé** : 5 minutes.
-- **Fichiers prévus** : une page/route entreprise, mise à jour du routing/header. (~2-3 fichiers)
-- **Tests unitaires prévus** : 1, sur le contenu/choix des arguments affichés selon le profil (peut compléter le test de l'itération 2).
-- **Étapes ajoutées à la démo** : retour au choix de profil → clic sur ENTREPRISE → vérification des arguments.
-- **Bilan** : _à remplir en fin d'itération_
+  - Étant donné l'écran « Qui êtes-vous ? », quand le visiteur le regarde, alors il voit 4 personas : particulier, entreprise, testateur, organisateur.
+  - Étant donné le choix d'un persona testateur ou organisateur, quand le visiteur valide, alors il arrive sur l'accueil avec le placeholder « à venir » (pas de régression sur particulier/entreprise).
+  - Étant donné un navigateur en thème sombre (`prefers-color-scheme: dark`), quand le visiteur regarde l'écran « Qui êtes-vous ? » ou le header, alors le texte des boutons reste lisible (contraste suffisant).
+- **Hypothèse de l'équipe couverte** : aucune — retour direct des cadreurs au tour de test de l'itération 2, pas un job to be done du PRD (testateur/organisateur restent hors périmètre PRD pour leur contenu).
+- **Codage estimé** : 4 minutes (3 pour les personas, 1 pour le correctif CSS).
+- **Fichiers prévus** : `frontend/src/app/personas.ts` (2 personas de plus), `frontend/src/app/page.module.css` (couleur de texte explicite). (~2 fichiers)
+- **Tests unitaires prévus** : 1, sur la couverture des 4 profils par `PERSONAS` (le correctif CSS n'est pas testable en Vitest, vérifié visuellement).
+- **Étapes ajoutées à la démo** : depuis l'écran « Qui êtes-vous ? », choix d'un persona testateur → vérification du placeholder.
+- **Bilan** :
+  - Codage réel : moins d'1 minute (pas de dépassement).
+  - Les 3 critères d'acceptation sont satisfaits : 4 personas sur l'écran de choix, testateur/organisateur mènent au placeholder sans régression, texte lisible en thème sombre (vérifié visuellement et via la démo Playwright, dont le rendu headless a confirmé le correctif).
+  - `npm test` : 7 tests passent (2 API + 5 front, dont le test `PERSONAS`/`trouverPersona` mis à jour pour les 4 profils). `npm run lint` : propre. `./scripts/verifier-deployabilite.sh` : aucune borne, aucune alarme.
+  - Déployé sur `localhost:8080` (frontend reconstruit et republié ; l'API n'a pas changé) ; `curl localhost:8080/health`, `/sante` et `localhost:8081/health` répondent 200/ok. Version 3 signalée à PM Lab (`moteur_avance: false`, enregistrée).
+  - Rien de bloqué par le harnais.
+  - Reporté : rien de cette itération. Les pages particulier/entreprise réelles restent hors budget du hackathon (voir « À venir »).
+  - **Modifications** :
+    - `frontend/src/app/personas.ts` : 2 personas de plus (testateur, organisateur) dans `PERSONAS` — critères 1 et 2.
+    - `frontend/src/app/personas.test.ts` : tests mis à jour pour couvrir les 4 profils et un identifiant réellement inconnu — critère 2 (DoD).
+    - `frontend/src/app/page.module.css` : `color` explicite ajoutée sur `.profilBouton` et `.personaBouton`, qui en manquaient — corrige le texte invisible en thème sombre (`color-scheme: dark`), signalé par le développeur — critère 3.
+    - `e2e/demo.spec.ts` : étape « je choisis la structure organisatrice » ajoutée à la démo (hors DoD).
 
 ---
 
 ## À venir
 
-1. Page de confirmation après le don, avec affichage statique du niveau de fidélité (si le temps restant le permet).
-2. Contenu réel des profils testateur et organisateur (version suivante, hors hackathon sauf décision contraire des cadreurs — aucun argument n'est fourni dans la passation).
-3. Stabilisation finale pour le pitch (dès que le temps restant ne permet plus qu'une itération) : vérifier le contrat de déployabilité, l'écran « Qui êtes-vous ? », la démo `e2e/demo.spec.ts`, et figer ce qui sera montré.
+1. Page particulier réelle (3 arguments du PRD + lien iRaiser) et page entreprise réelle (RSE, fiscalité du mécénat, badges) : reportées après le hackathon, faute de temps (moins de 20 minutes restantes après le retour des cadreurs).
+2. Page de confirmation après le don, avec affichage statique du niveau de fidélité.
+3. Contenu réel des profils testateur et organisateur (version suivante, hors hackathon sauf décision contraire des cadreurs — aucun argument n'est fourni dans la passation).

@@ -16,4 +16,10 @@ test("Démo : le cas passant", async ({ page }) => {
     await page.getByRole("button", { name: "TESTATEUR" }).click();
     await expect(page.getByText("Cette page arrive dans une prochaine version.")).toBeVisible();
   });
+
+  await test.step("Je reviens au choix de persona et je choisis la structure organisatrice", async () => {
+    await page.getByRole("button", { name: /Changer de persona/ }).click();
+    await page.getByRole("button", { name: /Une structure partenaire/ }).click();
+    await expect(page.getByText("Cette page arrive dans une prochaine version.")).toBeVisible();
+  });
 });
