@@ -310,6 +310,29 @@
 
 ---
 
+## Itération 10 : Un seul header (plus de doublon « Imagine for Margo »), bouton Se connecter dedans, bouton Faire un don retiré (demande du développeur)
+
+- Replanification du 2026-11-18 (nouvelle demande du développeur, après l'itération 9) : « mettre le se connecter dans le header et enlève faire un don, retravaille le design, parce que je vois Imagine for Margo en double ». ⚠️ Pas de skill « design » disponible dans ce projet (seulement des skills Playwright dans `node_modules`, sans rapport) : le redesign est fait directement. Cause du doublon identifiée : l'écran connecté empile le `header` (marque + profil actif) et le `siteNav` du mock (logo + rubriques + « FAIRE UN DON »), tous deux avec « Imagine for Margo ». Temps restant reconfirmé à ce moment : **moins de 10 minutes**, comme en itérations 7 à 9.
+- **Dans le périmètre** :
+  - Un seul header, partagé par les 3 écrans (mock, choix de profil, connecté) : logo « Imagine for Margo » une seule fois + rubriques de navigation.
+  - Écran mock (non connecté) : le bouton « Se connecter » est dans ce header, à droite.
+  - Écran connecté : le header affiche le profil actif et « Se déconnecter », à droite.
+  - Suppression du bouton « FAIRE UN DON » (CTA du site-nav, redondant avec « Accéder au don » du contenu profil, qui lui n'est pas touché).
+- **Hors périmètre** : contenu des rubriques (toujours inertes) ; le bouton « Accéder au don » et les arguments par profil (itérations 6/9, inchangés) ; l'écran de choix de profil garde son contenu actuel, seul le header au-dessus change.
+- **Critères d'acceptation** :
+  - Étant donné n'importe lequel des 3 écrans, quand je regarde le haut de la page, alors je vois « Imagine for Margo » une seule fois.
+  - Étant donné que je ne suis pas connecté, alors le bouton « Se connecter » est dans le header, et il n'y a plus de bouton « FAIRE UN DON ».
+  - Étant donné que je suis connecté, alors le header affiche mon profil actif et « Se déconnecter », et le bouton « Accéder au don » du contenu profil (itérations 6/9) est toujours là, sans régression.
+- **Hypothèse de l'équipe couverte** : aucune, correctif de design demandé directement par le développeur.
+- **Codage estimé** : 4 minutes (un seul composant de header remplaçant les deux existants, pas de nouvelle logique métier).
+- ✂️ Probablement sans marge pour un tour de test après publication, comme en itérations 7 à 9 : traitée comme une itération de stabilisation visuelle.
+- **Fichiers prévus** : `frontend/src/app/page.tsx` (header unique), `frontend/src/app/page.module.css` (styles consolidés), `e2e/demo.spec.ts` (le bouton « FAIRE UN DON » disparaît des assertions). (3 fichiers)
+- **Tests unitaires prévus** : aucun nouveau — changement de balisage/CSS pur, pas de nouvelle logique métier.
+- **Étapes ajoutées à la démo** : aucune nouvelle étape ; les étapes existantes qui vérifiaient « FAIRE UN DON » sont retirées ou adaptées.
+- **Bilan** : _à remplir en fin d'itération (durée de codage réelle, dépassement éventuel, fait, reporté, modifications fichier par fichier)_
+
+---
+
 ## À venir
 
 1. Page de confirmation après le don, avec affichage statique du niveau de fidélité (étape 4 du scénario idéal du PRD, au-delà du simple bouton « Accéder au don » posé en itérations 6 et 9).
