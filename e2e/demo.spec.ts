@@ -19,6 +19,11 @@ test("Démo : le cas passant", async ({ page }) => {
     await expect(page.getByRole("button", { name: "FAIRE UN DON" })).toBeVisible();
   });
 
+  await test.step("Je vois les arguments du PRD pour le particulier et le bouton de don", async () => {
+    await expect(page.getByText("Réduction d'impôt liée au don")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Accéder au don" })).toBeVisible();
+  });
+
   await test.step("Je regarde le profil TESTATEUR, sans contenu pour l'instant", async () => {
     await page.getByRole("button", { name: "TESTATEUR" }).click();
     await expect(page.getByText("Cette page arrive dans une prochaine version.")).toBeVisible();

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PROFILS, estProfilDisponible, peutContinuer, type Profil } from "./personas";
+import { PROFILS, argumentsDuProfil, estProfilDisponible, peutContinuer, type Profil } from "./personas";
 import styles from "./page.module.css";
 
 const RUBRIQUES = ["L'ASSOCIATION", "LES COURSES", "LE CANCER DES ENFANTS", "LA RECHERCHE", "NOUS AIDER"];
@@ -90,7 +90,17 @@ export default function Home() {
       </nav>
       <main className={styles.main}>
         <h1>Mobilisons-nous contre le cancer des enfants</h1>
-        {estProfilDisponible(profilActif) ? (
+        {argumentsDuProfil(profilActif) ? (
+          <>
+            <p>Bonjour {nom}. Voici pourquoi votre don compte :</p>
+            <ul className={styles.arguments}>
+              {argumentsDuProfil(profilActif)!.map((argument) => (
+                <li key={argument}>{argument}</li>
+              ))}
+            </ul>
+            <button className={styles.faireUnDon}>Accéder au don</button>
+          </>
+        ) : estProfilDisponible(profilActif) ? (
           <p>
             Bonjour {nom}. La page adaptée au profil {profilActif} arrive dans une prochaine itération.
           </p>

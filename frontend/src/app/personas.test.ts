@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PROFILS, estProfilDisponible, peutContinuer } from "./personas";
+import { PROFILS, argumentsDuProfil, estProfilDisponible, peutContinuer } from "./personas";
 
 describe("PROFILS", () => {
   it("propose les 4 profils du croquis de l'écran 1", () => {
@@ -32,5 +32,21 @@ describe("peutContinuer", () => {
 
   it("est vrai pour un nom renseigné", () => {
     expect(peutContinuer("Camille")).toBe(true);
+  });
+});
+
+describe("argumentsDuProfil", () => {
+  it("renvoie les 3 arguments du PRD pour le particulier, sans mélange avec l'entreprise", () => {
+    expect(argumentsDuProfil("particulier")).toEqual([
+      "Réduction d'impôt liée au don",
+      "Valorisation de l'engagement personnel et solidaire",
+      "Présentation des niveaux de fidélité",
+    ]);
+  });
+
+  it("renvoie undefined pour l'entreprise, le testateur et l'organisateur (pas encore de contenu)", () => {
+    expect(argumentsDuProfil("entreprise")).toBeUndefined();
+    expect(argumentsDuProfil("testateur")).toBeUndefined();
+    expect(argumentsDuProfil("organisateur")).toBeUndefined();
   });
 });

@@ -144,6 +144,11 @@
   border-color: var(--accent);
 }
 
+.arguments {
+  color: var(--text-secondary);
+  padding-left: 20px;
+}
+
 .authForm {
   display: flex;
   align-items: center;

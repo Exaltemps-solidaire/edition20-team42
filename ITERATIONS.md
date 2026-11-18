@@ -186,6 +186,8 @@
 
 ## Itération 6 : La page particulier réelle (3 arguments du PRD)
 
+- Temps restant reconfirmé au début de cette itération (2026-11-18) : **10 à 15 minutes**. Juste assez (codage réduit au strict minimum + publication ~5 min + tour de test 5 min) : codage visé à 4 minutes au lieu des 6 estimées, en réutilisant telle quelle la structure déjà posée (profil actif, bouton inerte du style « FAIRE UN DON »).
+
 - **Dans le périmètre** : quand le profil actif est PARTICULIER, l'accueil affiche les 3 arguments du scénario idéal du PRD (`cadrage/7-prd.md`, `cadrage/6-plan-de-livraison.md`) au lieu du placeholder — réduction d'impôt liée au don, valorisation de l'engagement personnel et solidaire, présentation des niveaux de fidélité (texte statique, pas le niveau réellement atteint) — suivis d'un bouton « Accéder au don », inerte comme « FAIRE UN DON » (itération 4) : pas de vrai lien iRaiser, non fourni dans la passation. S'appuie sur l'écran d'authentification simulée de l'itération 5, sans le modifier.
 - **Hors périmètre** : lien réel vers iRaiser ; page de confirmation post-don avec niveau réellement atteint (« À venir ») ; compte donateur, CRM, pop-up de relance (hors périmètre du hackathon entier).
 - **Critères d'acceptation** :
@@ -197,7 +199,20 @@
 - **Fichiers prévus** : `frontend/src/app/personas.ts` ou un nouveau `frontend/src/app/contenuProfils.ts` (les arguments par profil, séparés des personas), `frontend/src/app/page.tsx` (rendu conditionnel), `frontend/src/app/page.module.css`. (~3 fichiers)
 - **Tests unitaires prévus** : 1 à 2, sur la fonction d'accès aux arguments par profil (ex. `argumentsDuProfil("particulier")` retourne exactement les 3 arguments attendus, dans le bon ordre, sans mélange avec ceux de l'entreprise).
 - **Étapes ajoutées à la démo** : depuis l'accueil en profil particulier, vérification que les 3 arguments et le bouton « Accéder au don » sont visibles.
-- **Bilan** : _à remplir en fin d'itération (durée de codage réelle, dépassement éventuel, fait, reporté, modifications fichier par fichier)_
+- **Bilan** :
+  - Codage réel : < 1 minute (chrono à 0 min), aucun dépassement.
+  - Les 3 critères d'acceptation sont satisfaits : les 3 arguments du PRD et le bouton « Accéder au don » s'affichent pour PARTICULIER ; ENTREPRISE, TESTATEUR et ORGANISATEUR gardent le placeholder « à venir », sans régression.
+  - 9 tests passent (2 API + 7 front, dont les 2 nouveaux sur `argumentsDuProfil`). Lint clean. `./scripts/verifier-deployabilite.sh` : aucune borne franchie.
+  - Déployé (frontend uniquement, API inchangée) : `localhost:8080/`, `/health`, `/sante` et `localhost:8081/health` répondent tous 200.
+  - Démo mise à jour (nouvelle étape « Je vois les arguments du PRD pour le particulier et le bouton de don ») et rejouée avec succès.
+  - Version 6 signalée à PM Lab, rien bloqué par le harnais.
+  - Rien de reporté dans le périmètre propre de cette itération (le lien réel iRaiser et la page de confirmation post-don restent hors périmètre du hackathon, comme prévu).
+  - **Modifications** :
+    - `frontend/src/app/personas.ts` : ajout de `ARGUMENTS_PAR_PROFIL` et `argumentsDuProfil()` — sert les 2 premiers critères.
+    - `frontend/src/app/personas.test.ts` : 2 tests sur `argumentsDuProfil` (particulier vs. autres profils) — sert le critère de non-régression/non-mélange.
+    - `frontend/src/app/page.tsx` : rendu conditionnel des arguments + bouton « Accéder au don » quand `argumentsDuProfil(profilActif)` existe, sinon comportement inchangé — sert les 3 critères.
+    - `frontend/src/app/page.module.css` : classe `.arguments` pour la liste des arguments.
+    - `e2e/demo.spec.ts` : nouvelle étape de démo sur le contenu particulier.
 
 ---
 
