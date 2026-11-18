@@ -31,7 +31,12 @@ test("Démo : le cas passant", async ({ page }) => {
 
   await test.step("Je vois les arguments du PRD pour le particulier et le bouton de don", async () => {
     await expect(page.getByText("Réduction d'impôt liée au don")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Accéder au don" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Accéder au don" })).toBeVisible();
+  });
+
+  await test.step("Je clique sur Accéder au don et j'arrive sur l'emplacement du formulaire iRaiser", async () => {
+    await page.getByRole("link", { name: "Accéder au don" }).click();
+    await expect(page.getByText("Formulaire de don (iRaiser)")).toBeVisible();
   });
 
   await test.step("Je me déconnecte, je repasse par le mock, et je vois les arguments du PRD pour l'entreprise", async () => {
@@ -42,7 +47,7 @@ test("Démo : le cas passant", async ({ page }) => {
     await page.getByLabel("Votre nom").fill("Une entreprise partenaire");
     await page.getByRole("button", { name: "Se connecter" }).click();
     await expect(page.getByText("Engagement RSE")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Accéder au don" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Accéder au don" })).toBeVisible();
   });
 
   await test.step("Je me déconnecte et je regarde le profil TESTATEUR, sans contenu pour l'instant", async () => {

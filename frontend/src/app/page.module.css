@@ -94,6 +94,16 @@
   padding: 60px 24px;
 }
 
+.sectionDon {
+  margin-top: 24px;
+  padding: 16px 20px;
+  border: 1px dashed var(--accent);
+  border-radius: 12px;
+  background: var(--foreground);
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
 .main h1 {
   font-size: 32px;
   color: var(--text-primary);

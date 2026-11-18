@@ -345,7 +345,41 @@
 
 ---
 
+## Itération 11 : le bouton « Accéder au don » oriente réellement quelque part (étape 4 du plan de livraison validé)
+
+- Replanification du 2026-11-18 (vérification de la passation avant de détailler la suite). ⚠️ Écart trouvé avec la liste « À venir » précédente : `cadrage/6-plan-de-livraison.md`, le **plan validé par l'équipe**, s'arrête à 4 étapes, la dernière étant « Accès au don : chaque page de profil propose un bouton qui oriente vers iRaiser ». La « page de confirmation avec niveau de fidélité » n'est que dans le scénario narratif de `7-prd.md`, pas dans le plan priorisé, et recoupe un point explicitement **hors périmètre** (« Système de points et de niveaux complet »). Or le bouton actuel « Accéder au don » n'a ni `href` ni `onClick` : l'étape 4 du plan validé n'est donc pas encore livrée. ❗️ Aucune URL iRaiser n'est fournie dans la passation. Soumis au développeur : priorité confirmée sur le câblage du bouton, avec une ancre interne documentée (`#don`) en attendant la vraie URL iRaiser, plutôt que la page de confirmation/fidélité. Temps restant reconfirmé à ce moment : **moins de 20 minutes**.
+- **Dans le périmètre** :
+  - Le bouton « Accéder au don » (profils particulier et entreprise) devient un vrai lien vers une ancre `#don` sur la même page.
+  - Cette ancre affiche une section claire : « Formulaire de don (iRaiser) — lien à intégrer », pour ne pas prétendre remplacer iRaiser ni inventer une fausse page de don.
+- **Hors périmètre** : la vraie intégration iRaiser (URL non fournie) ; la page de confirmation et le niveau de fidélité (reportée, cf. écart ci-dessus — à valider par les cadreurs avant d'être reprise) ; les profils testateur/organisateur (toujours sans contenu).
+- **Critères d'acceptation** :
+  - Étant donné que je suis connecté en particulier ou en entreprise et que je vois les arguments, quand je clique sur « Accéder au don », alors je suis amené vers un point de contact visible, pas un bouton inerte.
+  - Étant donné que j'arrive sur ce point de contact, quand je le lis, alors il indique clairement qu'il s'agit d'un emplacement pour le futur lien iRaiser, pas une vraie page de don.
+  - Étant donné les profils testateur/organisateur, quand je les consulte, alors rien ne change pour eux (pas de régression).
+- **Hypothèse de l'équipe couverte** : étape 4 du plan de livraison validé (« Accès au don »).
+- **Codage estimé** : 5 minutes (un lien d'ancrage + une section statique, pas de nouvelle logique métier).
+- ✂️ Moins de 20 minutes au total ne couvre probablement pas codage + publication (~5 min) + un tour de test complet de l'équipe (10 min par défaut) : traitée comme une itération de stabilisation, sans attendre un tour de test derrière.
+- **Fichiers prévus** : `frontend/src/app/page.tsx` (lien + section d'ancrage), `frontend/src/app/page.module.css` (style de la section), `e2e/demo.spec.ts` (étape de clic vérifiant l'arrivée sur la section). (3 fichiers)
+- **Tests unitaires prévus** : aucun nouveau — pas de nouvelle logique métier, seulement du balisage.
+- **Étapes ajoutées à la démo** : clic sur « Accéder au don » puis vérification de la section d'ancrage, pour le profil particulier.
+- **Bilan** :
+  - Codage réel : moins d'1 minute, sans dépassement.
+  - Les 3 critères d'acceptation sont satisfaits : « Accéder au don » est un vrai lien vers l'ancre `#don` (particulier et entreprise), la section d'arrivée indique clairement « Formulaire de don (iRaiser) — lien à intégrer dès que l'association nous le fournit », et les profils testateur/organisateur sont inchangés.
+  - Tests : aucun nouveau test (markup pur, confirmé) ; `npm test` passe toujours avec 10 tests (2 API + 8 front).
+  - Contrat de déployabilité : `./scripts/verifier-deployabilite.sh` → « aucune borne franchie ».
+  - Déploiement : image frontend reconstruite et republiée, conteneur recréé (`podman ps` confirme `Up`), `localhost:8080/`, `/health`, `/sante` et `localhost:8081/health` répondent tous 200.
+  - Démo : `e2e/demo.spec.ts` mis à jour (le bouton devient un lien `role="link"`, nouvelle étape de clic vers la section `#don`) et rejouée avec succès (1 passed).
+  - Version 11 signalée à PM Lab avec succès (aucun blocage du harnais).
+  - Reporté : la page de confirmation avec niveau de fidélité (⚠️ hors plan validé, cf. note de replanification ci-dessus, à valider par les cadreurs) ; le câblage d'une vraie URL iRaiser (❗️ non fournie dans la passation).
+  - **Modifications** :
+    - `frontend/src/app/page.tsx` : le bouton « Accéder au don » devient un `<a href="#don">` ; ajout d'une `<section id="don">` avec le message d'attente du lien iRaiser réel. Sert les 2 premiers critères d'acceptation.
+    - `frontend/src/app/page.module.css` : ajout de `.sectionDon` (encadré discret, bordure en pointillés couleur accent) pour que la section d'arrivée soit visuellement distincte du reste du contenu. Sert le critère de clarté du point de contact.
+    - `e2e/demo.spec.ts` : les assertions sur le bouton « Accéder au don » passent de `role="button"` à `role="link"` ; nouvelle étape de clic vérifiant l'arrivée sur la section `#don`. Sert les 2 premiers critères d'acceptation.
+
+---
+
 ## À venir
 
-1. Page de confirmation après le don, avec affichage statique du niveau de fidélité (étape 4 du scénario idéal du PRD, au-delà du simple bouton « Accéder au don » posé en itérations 6 et 9).
+1. Page de confirmation après le don, avec affichage statique du niveau de fidélité (scénario narratif de `7-prd.md`, au-delà du plan de livraison validé qui s'arrête à l'étape 4 — ⚠️ recoupe un point hors périmètre, à valider par les cadreurs avant d'être reprise).
 2. Contenu réel des profils testateur et organisateur (version suivante, hors hackathon sauf décision contraire des cadreurs — aucun argument n'est fourni dans la passation pour ces deux profils, à la différence de particulier/entreprise).
+3. Câblage d'une vraie URL iRaiser à la place de l'ancre `#don` posée en itération 11, dès qu'une adresse est fournie par l'équipe.

@@ -117,7 +117,12 @@ export default function Home() {
                 <li key={argument}>{argument}</li>
               ))}
             </ul>
-            <button className={styles.faireUnDon}>Accéder au don</button>
+            <a className={styles.faireUnDon} href="#don">
+              Accéder au don
+            </a>
+            <section id="don" className={styles.sectionDon}>
+              <p>Formulaire de don (iRaiser) — lien à intégrer dès que l&apos;association nous le fournit.</p>
+            </section>
           </>
         ) : estProfilDisponible(profilActif) ? (
           <p>
